@@ -1,0 +1,15 @@
+cloudinary==1.8.0
+factory-boy==2.8.1
+Django==1.11.2
+django-extensions==1.7.9
+django-mptt==0.8.7
+django-redis==4.8.0
+psycopg2==2.7.1
+pytz==2017.2
+
+# Custom libraries
+-e git+https://github.com/bvujicic/yml-to-env.git#egg=yml-to-env
+-e git+https://github.com/bvujicic/django-utils.git#egg=django-utils
+
+gunicorn
+celery
