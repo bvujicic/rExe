@@ -1,30 +1,31 @@
 import os
 
-import cloudinary
+from yml_config  import Config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-os.environ.get = os.environ.get
+env = Config.from_yaml('config.yml')
+env.to_env()
 
 
-DEBUG = os.environ.get('DJANGO_DEBUG', False)
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split()
+DEBUG = env('DJANGO_DEBUG', False)
+ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS', '*').split()
 SECRET_KEY = 'asdfsa'
 
 INTERNAL_IPS = ['127.0.0.1']
 
 ADMINS = [
-    (os.environ.get('DJANGO_ADMIN_NAME'), os.environ.get('DJANGO_ADMIN_EMAIL'))
+    (env('DJANGO_ADMIN_NAME'), env('DJANGO_ADMIN_EMAIL'))
 ]
 
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.{}'.format(os.environ.get('DJANGO_DATABASE_BACKEND', 'sqlite3')),
-        'NAME': os.environ.get('POSTGRES_DB', os.path.join(BASE_DIR, 'db.sqlite3')),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'ENGINE': 'django.db.backends.{}'.format(env('DJANGO_DATABASE_BACKEND', 'sqlite3')),
+        'NAME': env('DJANGO_DATABASE_NAME', os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': env('DJANGO_DATABASE_USER'),
+        'PASSWORD': env('DJANGO_DATABASE_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '5432'
     }
@@ -32,11 +33,11 @@ DATABASES = {
 
 
 # Cache
-if os.environ.get('DJANGO_REDIS_LOCATION'):
+if env('DJANGO_REDIS_LOCATION'):
     CACHES = {
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
-            'LOCATION': os.environ.get('DJANGO_REDIS_LOCATION'),
+            'LOCATION': env('DJANGO_REDIS_LOCATION'),
             'OPTIONS': {
                 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             },
@@ -46,15 +47,15 @@ if os.environ.get('DJANGO_REDIS_LOCATION'):
 
 
 # Session
-if os.environ.get('DJANGO_REDIS_LOCATION'):
+if env('DJANGO_REDIS_LOCATION'):
     SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 
 # Email
-EMAIL_BACKEND = 'django.core.mail.backends.{}.EmailBackend'.format(os.environ.get('DJANGO_EMAIL_BACKEND'))
-EMAIL_HOST = os.environ.get('DJANGO_EMAIL_HOST')
-EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = 'django.core.mail.backends.{}.EmailBackend'.format(env('DJANGO_EMAIL_BACKEND'))
+EMAIL_HOST = env('DJANGO_EMAIL_HOST')
+EMAIL_HOST_USER = env('DJANGO_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('DJANGO_EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -136,7 +137,7 @@ STATIC_ROOT = '/static/'
 
 # Media
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_PATH')
+MEDIA_ROOT = env('DJANGO_MEDIA_PATH')
 
 
 # Logging
@@ -160,7 +161,7 @@ MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_PATH')
 #         },
 #         'mail_admins': {
 #             'class': 'django.utils.log.AdminEmailHandler',
-#             'email_backend': 'django.core.mail.backends.{}.EmailBackend'.format(os.environ.get('DJANGO_EMAIL_BACKEND')),
+#             'email_backend': 'django.core.mail.backends.{}.EmailBackend'.format(env('DJANGO_EMAIL_BACKEND')),
 #             'level': 'ERROR',
 #             'include_html': True
 #         },
@@ -194,10 +195,3 @@ MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_PATH')
 #         }
 #     }
 # }
-
-# Cloudinary
-cloudinary.config(
-  cloud_name = os.environ.get('DJANGO_CLOUDINARY_CLOUD_NAME'),
-  api_key = os.environ.get('DJANGO_CLOUDINARY_API_KEY'),
-  api_secret = os.environ.get('DJANGO_CLOUDINARY_API_SECRET')
-)
