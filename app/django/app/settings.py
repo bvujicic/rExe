@@ -140,60 +140,60 @@ MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_PATH')
 
 
 # Logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': "[%(asctime)s] [logger: %(name)s] [%(levelname)s] [%(module)s:%(lineno)s] %(message)s",
-            'datefmt': "%Y-%m-%d %H:%M:%S"
-        },
-        'simple': {
-            'format': "%(levelname)s %(message)s"
-        }
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'level': 'DEBUG',
-            'formatter': 'verbose'
-        },
-        'mail_admins': {
-            'class': 'django.utils.log.AdminEmailHandler',
-            'email_backend': 'django.core.mail.backends.{}.EmailBackend'.format(os.environ.get('DJANGO_EMAIL_BACKEND')),
-            'level': 'ERROR',
-            'include_html': True
-        },
-        'django': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'maxBytes': 1024 * 1024,
-            'backupCount': 10,
-            'filename': '/var/log/django.log',
-            'level': 'INFO',
-            'formatter': 'verbose'
-        },
-        'web': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'maxBytes': 1024 * 1024,
-            'backupCount': 10,
-            'filename': '/var/log/web.log',
-            'level': 'INFO',
-            'formatter': 'verbose'
-        }
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['django', 'console'],
-            'level': 'INFO',
-            'propagate': False
-        },
-        'web': {
-            'handlers': ['web', 'console'],
-            'level': 'INFO',
-            'propagate': False
-        }
-    }
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'verbose': {
+#             'format': "[%(asctime)s] [logger: %(name)s] [%(levelname)s] [%(module)s:%(lineno)s] %(message)s",
+#             'datefmt': "%Y-%m-%d %H:%M:%S"
+#         },
+#         'simple': {
+#             'format': "%(levelname)s %(message)s"
+#         }
+#     },
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#             'level': 'DEBUG',
+#             'formatter': 'verbose'
+#         },
+#         'mail_admins': {
+#             'class': 'django.utils.log.AdminEmailHandler',
+#             'email_backend': 'django.core.mail.backends.{}.EmailBackend'.format(os.environ.get('DJANGO_EMAIL_BACKEND')),
+#             'level': 'ERROR',
+#             'include_html': True
+#         },
+#         'django': {
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'maxBytes': 1024 * 1024,
+#             'backupCount': 10,
+#             'filename': '/var/log/django.log',
+#             'level': 'INFO',
+#             'formatter': 'verbose'
+#         },
+#         'web': {
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'maxBytes': 1024 * 1024,
+#             'backupCount': 10,
+#             'filename': '/var/log/web.log',
+#             'level': 'INFO',
+#             'formatter': 'verbose'
+#         }
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['django', 'console'],
+#             'level': 'INFO',
+#             'propagate': False
+#         },
+#         'web': {
+#             'handlers': ['web', 'console'],
+#             'level': 'INFO',
+#             'propagate': False
+#         }
+#     }
+# }
 
 # Cloudinary
 cloudinary.config(
