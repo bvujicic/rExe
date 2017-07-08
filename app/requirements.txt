@@ -1,10 +1,4 @@
-cloudinary==1.8.0
-factory-boy==2.8.1
-Django==1.11.2
-django-extensions==1.7.9
-django-mptt==0.8.7
-django-redis==4.8.0
-psycopg2==2.7.1
+Django==1.11.3
 pytz==2017.2
 
 # Custom libraries
