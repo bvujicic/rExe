@@ -1,3 +1,4 @@
+import os
 import zipfile
 
 from django.contrib.auth.signals import user_logged_in
@@ -23,14 +24,23 @@ def save_login_ip_address(sender, request, user, **kwargs):
 
 
 @receiver(post_save, sender=Iteration)
-def extract_archive(sender, instance, **kwargs):
+def extract_iteration_archive(sender, instance, **kwargs):
     """
     Extract zipped input file.
     """
     try:
         with zipfile.ZipFile(file=instance.input_data.file) as archive:
-            archive.extractall()
+            archive.extractall(path=os.path.dirname(instance.input_data.path))
 
     except zipfile.BadZipfile as exc:
         print(exc)
         pass
+
+    print('first')
+
+
+@receiver(post_save, sender=Iteration)
+def create_iteration_job(sender, instance, **kwargs):
+    """
+    """
+    print('second')

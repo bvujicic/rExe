@@ -1,0 +1,33 @@
+{% include 'base.html' %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+
+    {% include 'layout/sidebar.html' %}
+
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+      <h2 class="sub-header">Nova obrada</h2>
+      {{ form.errors }}
+      <form class="form" action="{% url 'iteration_create' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <label for="{{ form.algorithm.id_for_label }}" class="sr-only">Algoritam</label>
+          {{ form.algorithm }}
+          <!--<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">-->
+          <label for="{{ form.input_data.id_for_label }}" class="sr-only">Ulazni podaci</label>
+          {{ form.input_data }}
+          <hr>
+          <input class="btn btn-lg btn-primary btn-block" type="submit" value="Pošalji">
+        </div>
+        <div class="col-md-4"></div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
