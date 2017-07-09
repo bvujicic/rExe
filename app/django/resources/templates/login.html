@@ -3,29 +3,27 @@
 
 {% block content %}
 
-<div class="container">
-      <div class="col-md-4"></div>
-      <div class="col-md-4">
-        <form class="form-signin" action="{% url 'landing' %}" method="POST">{% csrf_token %}
-          {{ form.errors}}
-          <h2 class="form-signin-heading">Please, sign in</h2>
-          <label for="{{ form.username.id_for_label }}" class="sr-only">Email adresa</label>
-          {{ form.username }}
-          <!--<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">-->
-          <label for="{{ form.password.id_for_label }}" class="sr-only">Lozinka</label>
-          {{ form.password }}
-          <!--<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">-->
-          <div class="checkbox">
-            <!--<label>-->
-              <!--<input type="checkbox" value="remember-me"> Remember me-->
-            <!--</label>-->
-          </div>
-          <input class="btn btn-lg btn-primary btn-block" type="submit" value="Sign in">
-        </form>
+<div class="container-fluid">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <form class="form-signin" action="{% url 'landing' %}" method="POST">{% csrf_token %}
+      {{ form.errors}}
+      <h2 class="form-signin-heading">Please, sign in</h2>
+      <label for="{{ form.username.id_for_label }}" class="sr-only">Email adresa</label>
+      {{ form.username }}
+      <!--<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">-->
+      <label for="{{ form.password.id_for_label }}" class="sr-only">Lozinka</label>
+      {{ form.password }}
+      <!--<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">-->
+      <div class="checkbox">
+        <!--<label>-->
+          <!--<input type="checkbox" value="remember-me"> Remember me-->
+        <!--</label>-->
       </div>
-      <div class="col-md-4"></div>
-
-
+      <input class="btn btn-lg btn-primary btn-block" type="submit" value="Sign in">
+    </form>
+  </div>
+  <div class="col-md-4"></div>
 </div>
 
 {% endblock %}
