@@ -7,6 +7,7 @@ from django.dispatch import receiver
 
 from ipware.ip import get_ip
 
+from app.celery import execute_algorithm
 from web.models import Iteration, LoginHistory
 
 
@@ -36,11 +37,11 @@ def extract_iteration_archive(sender, instance, **kwargs):
         print(exc)
         pass
 
-    print('first')
-
 
 @receiver(post_save, sender=Iteration)
 def create_iteration_job(sender, instance, **kwargs):
     """
     """
-    print('second')
+    result = execute_algorithm.apply_async(task_id=instance.id)
+
+    return result
