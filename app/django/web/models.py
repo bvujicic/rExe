@@ -1,21 +1,25 @@
+import uuid
+
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from django_utils.abstract import TimestampModel
 
+from web.service import upload_path_exe
+
 
 class Algorithm(TimestampModel):
     """
     Information and binaries connected to an algorithm/application for remote execution.
     """
-    id = models.UUIDField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(verbose_name=_('naziv'), max_length=255)
-    file = models.FileField(verbose_name=_('datoteka za izvršenje'))
-    description = models.TextField(verbose_name=_('opis'))
-    document = models.FileField(verbose_name=_('dokumentacija'))
+    file = models.FileField(verbose_name=_('datoteka za izvršenje'), upload_to=upload_path_exe)
+    description = models.TextField(verbose_name=_('opis'), blank=True)
+    document = models.FileField(verbose_name=_('dokumentacija'), blank=True, upload_to=upload_path_exe)
 
-    users = models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name=_('korisnici s pristupom'))
+    users = models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name=_('korisnici s pristupom'), blank=True)
 
     class Meta:
         verbose_name = _('algoritam')
@@ -39,7 +43,7 @@ class Iteration(TimestampModel):
         (ABORTED, _('prekinut')),
         (PASSED, _('završen')),
     )
-    id = models.UUIDField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     input_data = models.FileField(verbose_name=_('ulazni podaci'))
     output_data = models.FileField(verbose_name=_('izlazni podaci'))
     status_code = models.SmallIntegerField(verbose_name=_('statusni kod'), choices=STATUS_CHOICES)
