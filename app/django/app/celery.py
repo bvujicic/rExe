@@ -6,15 +6,11 @@ celery = Celery(main='app', broker='redis://localhost:6379/0')
 
 celery.conf.update(
     task_track_started=True,
-    result_backend='db+postgresql://devel:devel@localhost/rexe',
-    # database_table_names = {
-    #     'task': 'myapp_taskmeta',
-    #     'group': 'myapp_groupmeta',
-    # }
+    #result_backend='db+postgresql://devel:devel@localhost/rexe'
 )
 
 
-@celery.task(task_track_started=True)
+@celery.task(track_started=True)
 def execute_algorithm():
     time.sleep(15)
 
