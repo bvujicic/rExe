@@ -19,4 +19,5 @@ class IterationAdmin(admin.ModelAdmin):
 
 @admin.register(LoginHistory)
 class LoginHistoryAdmin(admin.ModelAdmin):
-    pass
+
+    list_display = ('user', 'address', 'created')
