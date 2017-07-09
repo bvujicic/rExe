@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from django_utils.abstract import TimestampModel
 
-from web.service import upload_path_exe
+from web.service import upload_path_exe, upload_path_input_data
 
 
 class Algorithm(TimestampModel):
@@ -44,10 +44,10 @@ class Iteration(TimestampModel):
         (PASSED, _('završen')),
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    input_data = models.FileField(verbose_name=_('ulazni podaci'))
-    output_data = models.FileField(verbose_name=_('izlazni podaci'))
-    status_code = models.SmallIntegerField(verbose_name=_('statusni kod'), choices=STATUS_CHOICES)
-    status_message = models.TextField(verbose_name=_('statusna poruka'))
+    input_data = models.FileField(verbose_name=_('ulazni podaci'), upload_to=upload_path_input_data)
+    output_data = models.FileField(verbose_name=_('izlazni podaci'), blank=True)
+    status_code = models.SmallIntegerField(verbose_name=_('statusni kod'), choices=STATUS_CHOICES, null=True, blank=True)
+    status_message = models.TextField(verbose_name=_('statusna poruka'), blank=True)
 
     algorithm = models.ForeignKey(to='web.Algorithm', verbose_name=_('algoritam'), on_delete=models.PROTECT)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, verbose_name=_('korisnik'), on_delete=models.PROTECT)
@@ -59,7 +59,7 @@ class Iteration(TimestampModel):
         ordering = ('-created', 'algorithm')
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 class LoginHistory(TimestampModel):

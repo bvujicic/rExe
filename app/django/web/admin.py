@@ -14,7 +14,7 @@ class AlgorithmAdmin(admin.ModelAdmin):
 class IterationAdmin(admin.ModelAdmin):
 
     list_display = ('id', 'input_data', 'output_data', 'status_code')
-
+    exclude = ('id',)
 
 
 @admin.register(LoginHistory)
