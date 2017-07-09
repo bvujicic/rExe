@@ -6,7 +6,7 @@
 <div class="container-fluid">
   <div class="col-md-4"></div>
   <div class="col-md-4">
-    <form class="form-signin" action="{% url 'landing' %}" method="POST">{% csrf_token %}
+    <form class="form-signin" action="{% url 'login' %}" method="POST">{% csrf_token %}
       {{ form.errors}}
       <h2 class="form-signin-heading">Please, sign in</h2>
       <label for="{{ form.username.id_for_label }}" class="sr-only">Email adresa</label>

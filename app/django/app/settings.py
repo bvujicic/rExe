@@ -139,6 +139,10 @@ STATIC_ROOT = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = env('DJANGO_MEDIA_PATH')
 
+# Login
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+
 
 # Logging
 # LOGGING = {

@@ -16,7 +16,7 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Help</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
       </ul>
     </div>
   </div>
@@ -26,14 +26,12 @@
   <div class="row">
     <div class="col-sm-3 col-md-2 sidebar">
       <ul class="nav nav-sidebar">
-        <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Reports</a></li>
-        <li><a href="#">Analytics</a></li>
-        <li><a href="#">Export</a></li>
+        <li class="active"><a href="{% url 'home' %}">Rezultati <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Nova obrada</a></li>
       </ul>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-      <h1 class="page-header">Dashboard</h1>
+      <!--<h1 class="page-header">Dashboard</h1>-->
 
       <!--<div class="row placeholders">-->
         <!--<div class="col-xs-6 col-sm-3 placeholder">-->
@@ -58,26 +56,28 @@
         <!--</div>-->
       <!--</div>-->
 
-      <h2 class="sub-header">Section title</h2>
+      <h2 class="sub-header">Rezultati posljednjih obrada</h2>
       <div class="table-responsive">
         <table class="table table-striped">
           <thead>
             <tr>
               <th>#</th>
-              <th>Header</th>
-              <th>Header</th>
-              <th>Header</th>
-              <th>Header</th>
+              <th>ID</th>
+              <th>Ulazni podaci</th>
+              <th>Izlazni podaci</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
+          {% for item in object_list %}
             <tr>
-              <td>1,001</td>
-              <td>Lorem</td>
-              <td>ipsum</td>
-              <td>dolor</td>
-              <td>sit</td>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ item.id }}</td>
+              <td>{{ item.input_data }}</td>
+              <td>{{ item.output_data }}</td>
+              <td><span class="label label-success">{{ item.status }}</span></td>
             </tr>
+          {% empty %}
             <tr>
               <td>1,002</td>
               <td>amet</td>
@@ -92,6 +92,7 @@
               <td>odio</td>
               <td>Praesent</td>
             </tr>
+          {% endfor %}
           </tbody>
         </table>
       </div>

@@ -7,7 +7,9 @@ import web.views as views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.LandingView.as_view(), name='landing'),
+    url(r'^login/$', views.LoginView.as_view(), name='login'),
+    url(r'^logout/$', views.LogoutView.as_view(), name='logout'),
+    url(r'^$', views.HomeView.as_view(), name='home'),
 ]
 
 if settings.DEBUG:
