@@ -72,7 +72,7 @@ INSTALLED_APPS = [
     'django_extensions',
     #'cloudinary',
     #'nucleus',
-    'web'
+    'web.apps.WebConfig'
 ]
 
 # if DEBUG:

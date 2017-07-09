@@ -13,7 +13,7 @@ class AlgorithmAdmin(admin.ModelAdmin):
 @admin.register(Iteration)
 class IterationAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'input_data', 'output_data', 'status_code')
+    list_display = ('id', 'input_data', 'output_data', 'status_code', 'algorithm', 'user')
     exclude = ('id',)
 
 

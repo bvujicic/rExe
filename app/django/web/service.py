@@ -2,6 +2,9 @@
 
 """
 
+def _app_folder(instance):
+    return 'app_{app_id}'.format(app_id=instance.id.hex)
+
 
 def upload_path_exe(instance, filename):
     """
@@ -11,7 +14,7 @@ def upload_path_exe(instance, filename):
     :param filename:
     :return:
     """
-    return 'app_{app_id}/{filename}'.format(app_id=instance.id.hex, filename=filename)
+    return '{app_folder}/{filename}'.format(app_folder=_app_folder(instance), filename=filename)
 
 
 def upload_path_input_data(instance, filename):
@@ -19,8 +22,8 @@ def upload_path_input_data(instance, filename):
 
     iteration_count = Iteration.objects.filter(user=instance.user).count() + 1
 
-    return 'app_{app_id}/{user_id}/{iteration_count}/in/{filename}'.format(
-        app_id=instance.algorithm.id.hex,
+    return '{app_folder}/{user_id}/{iteration_count}/in/{filename}'.format(
+        app_folder=_app_folder(instance.algorithm),
         user_id=instance.user.id,
         iteration_count=iteration_count,
         filename=filename
