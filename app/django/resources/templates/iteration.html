@@ -12,43 +12,22 @@
 
       <h2 class="sub-header">Rezultati obrade</h2>
       <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>ID</th>
-              <th>Ulazni podaci</th>
-              <th>Izlazni podaci</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for item in object_list %}
-            <tr>
-              <td>{{ forloop.counter }}</td>
-              <td><a href="{% url 'iteration' item.id %}">{{ item.id }}</a></td>
-              <td>{{ item.input_data }}</td>
-              <td>{{ item.output_data }}</td>
-              <td><span class="label label-success">{{ item.status }}</span></td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td>1,002</td>
-              <td>amet</td>
-              <td>consectetur</td>
-              <td>adipiscing</td>
-              <td>elit</td>
-            </tr>
-            <tr>
-              <td>1,003</td>
-              <td>Integer</td>
-              <td>nec</td>
-              <td>odio</td>
-              <td>Praesent</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
+        <h3>Odabrani algoritam: <strong>{{ object.algorithm }}</strong></h3>
+        {% if object.algorith.description %}
+          <h3>Opis algoritma:</h3>
+          <p>{{ object.algorithm.description }}</p>
+        {% endif %}
+        <h3>Vrijeme početka obrade: <strong>{{ object.created }}</strong></h3>
+        <h3>Status obrade: <strong>{{ object.status_code }}</strong></h3>
+
+        <div class="col-md-6">
+          <h3>Ulazni podaci:</h3>
+          <a href="">{{ object.input_data }}</a>
+        </div>
+        <div class="col-md-6">
+          <h3>Izlazni podaci:</h3>
+          <a href="">{{ object.output_data }}</a>
+        </div>
       </div>
     </div>
   </div>
