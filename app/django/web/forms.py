@@ -1,11 +1,15 @@
 import zipfile
 
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from web.models import Algorithm, Iteration
+
+
+User = get_user_model()
 
 
 class AuthenticationForm(BaseAuthenticationForm):
@@ -17,6 +21,45 @@ class AuthenticationForm(BaseAuthenticationForm):
 
         self.fields['username'].widget = forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Korisničko ime'})
         self.fields['password'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': 'Lozinka'})
+
+
+class RegistrationForm(UserCreationForm):
+    """
+
+    """
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['first_name'].widget = forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Ime'})
+        self.fields['last_name'].widget = forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Prezime'})
+        self.fields['username'].widget = forms.EmailInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Email'})
+        self.fields['password1'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': 'Lozinka'})
+        self.fields['password2'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': 'Ponovi lozinku'})
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        try:
+            User.objects.get(username=username)
+
+        except User.DoesNotExist:
+            return username
+
+        else:
+            self.add_error(field='username', error=ValidationError(_('Korisnik s navedenom e-mail adresom već postoji.')))
+
+    def save(self, commit=True):
+        user = User.objects.create_user(
+            username=self.cleaned_data['username'],
+            email=self.cleaned_data['username'],
+            password=self.cleaned_data['password1'],
+            first_name=self.cleaned_data['first_name'],
+            last_name=self.cleaned_data['last_name'],
+        )
+
+        return user
 
 
 class IterationCreateForm(forms.ModelForm):

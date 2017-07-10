@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block nav %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <form class="form-signin" action="{% url 'register' %}" method="POST">{% csrf_token %}
+      {{ form.errors}}
+      <h2 class="form-signin-heading">Registracija</h2>
+      <label for="{{ form.first_name.id_for_label }}" class="sr-only">Ime</label>
+      {{ form.first_name }}
+      <label for="{{ form.last_name.id_for_label }}" class="sr-only">Prezime</label>
+      {{ form.last_name }}
+      <label for="{{ form.username.id_for_label }}" class="sr-only">Email adresa (korisničko ime)</label>
+      {{ form.username }}
+      <br>
+      <label for="{{ form.password1.id_for_label }}" class="sr-only">Lozinka</label>
+      {{ form.password1 }}
+      <label for="{{ form.password2.id_for_label }}" class="sr-only">Ponovi lozinku</label>
+      {{ form.password2 }}
+      <br>
+      <input class="btn btn-lg btn-primary btn-block" type="submit" value="Pošalji">
+    </form>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+
+{% endblock %}

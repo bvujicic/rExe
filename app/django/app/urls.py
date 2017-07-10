@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', views.LoginView.as_view(), name='login'),
     url(r'^logout/$', views.LogoutView.as_view(), name='logout'),
+    url(r'^registracija/$', views.RegisterView.as_view(), name='register'),
     url(r'^nova-obrada/$', views.IterationCreateView.as_view(), name='iteration_create'),
     url(r'^$', views.HomeView.as_view(), name='home'),
 ]

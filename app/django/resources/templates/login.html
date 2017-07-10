@@ -1,27 +1,40 @@
-{% include 'base.html' %}
+{% extends 'base.html' %}
 
+
+{% block nav %}
+{% endblock %}
 
 {% block content %}
 
 <div class="container-fluid">
   <div class="col-md-4"></div>
   <div class="col-md-4">
+
+    {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-success" role="alert">
+        {{ message }}
+      </div>
+      {% endfor %}
+    {% endif %}
+
     <form class="form-signin" action="{% url 'login' %}" method="POST">{% csrf_token %}
       {{ form.errors}}
-      <h2 class="form-signin-heading">Please, sign in</h2>
+      <h2 class="form-signin-heading">Logiraj se</h2>
       <label for="{{ form.username.id_for_label }}" class="sr-only">Email adresa</label>
       {{ form.username }}
-      <!--<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">-->
       <label for="{{ form.password.id_for_label }}" class="sr-only">Lozinka</label>
       {{ form.password }}
-      <!--<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">-->
-      <div class="checkbox">
-        <!--<label>-->
-          <!--<input type="checkbox" value="remember-me"> Remember me-->
-        <!--</label>-->
-      </div>
-      <input class="btn btn-lg btn-primary btn-block" type="submit" value="Sign in">
+      <br>
+      <input class="btn btn-lg btn-primary btn-block" type="submit" value="Pošalji">
     </form>
+    <hr>
+    <div class="col-md-6">
+      <a class="btn btn-info btn-block" href="{% url 'register' %}" role="button">Registriraj novog korisnika</a>
+    </div>
+    <div class="col-md-6">
+      <a class="btn btn-info btn-block" href="#" role="button">Resetiraj lozinku</a>
+    </div>
   </div>
   <div class="col-md-4"></div>
 </div>
