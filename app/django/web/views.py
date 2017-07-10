@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as BaseLogoutView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import ListView, CreateView, FormView
+from django.views.generic import ListView, CreateView, FormView, DetailView
 
 
 from web.forms import AuthenticationForm, IterationCreateForm, RegistrationForm
@@ -36,7 +36,6 @@ class RegisterView(FormView):
 
     def form_valid(self, form):
         form.save()
-
         messages.add_message(self.request, level=messages.INFO, message=_('Potvrda o registracija poslana na e-mail.'))
 
         return super().form_valid(form)
@@ -50,9 +49,7 @@ class HomeView(LoginRequiredMixin, ListView):
     model = Iteration
 
     def get_queryset(self):
-        qs = super().get_queryset()
-
-        return qs.filter(user=self.request.user)
+        return super().get_queryset().filter(user=self.request.user)
 
 
 class IterationCreateView(LoginRequiredMixin, CreateView):
@@ -70,3 +67,18 @@ class IterationCreateView(LoginRequiredMixin, CreateView):
         kwargs['user'] = self.request.user
 
         return kwargs
+
+
+class IterationView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    """
+    GET: Renders Iteration details. Returns 403 if logged user is not related to Iteration.
+    """
+    template_name = 'iteration.html'
+    model = Iteration
+    raise_exception = True
+
+    def test_func(self):
+        if self.request.user == self.get_object().user:
+            return True
+
+        return False

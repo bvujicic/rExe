@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns, static
 
 import web.views as views
@@ -11,6 +12,11 @@ urlpatterns = [
     url(r'^logout/$', views.LogoutView.as_view(), name='logout'),
     url(r'^registracija/$', views.RegisterView.as_view(), name='register'),
     url(r'^nova-obrada/$', views.IterationCreateView.as_view(), name='iteration_create'),
+    url(
+        r'^(?P<pk>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$',
+        views.IterationView.as_view(),
+        name='iteration'
+    ),
     url(r'^$', views.HomeView.as_view(), name='home'),
 ]
 
