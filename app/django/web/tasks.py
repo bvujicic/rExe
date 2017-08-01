@@ -1,3 +1,4 @@
+import subprocess
 import sys
 import time
 
@@ -50,7 +51,6 @@ class IterationTask(Task):
 
 
 @shared_task(base=IterationTask, track_started=True, bind=True, acks_late=True)
-def execute_algorithm(self):
-    time.sleep(3)
+def execute_algorithm(self, algorithm_path):
 
-    raise RuntimeError()
+    process = subprocess.run(f'python {algorithm_path}', check=True, timeout=60, shell=True)

@@ -46,7 +46,13 @@ class Iteration(TimestampModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     input_data = models.FileField(verbose_name=_('ulazni podaci'), upload_to=upload_path_input_data)
     output_data = models.FileField(verbose_name=_('izlazni podaci'), blank=True)
-    status_code = models.SmallIntegerField(verbose_name=_('statusni kod'), choices=STATUS_CHOICES, null=True, blank=True)
+    status_code = models.SmallIntegerField(
+        verbose_name=_('statusni kod'),
+        choices=STATUS_CHOICES,
+        null=True,
+        blank=True,
+        default=START
+    )
     status_message = models.TextField(verbose_name=_('statusna poruka'), blank=True)
 
     algorithm = models.ForeignKey(to='web.Algorithm', verbose_name=_('algoritam'), on_delete=models.PROTECT)
@@ -60,6 +66,18 @@ class Iteration(TimestampModel):
 
     def __str__(self):
         return str(self.id)
+
+    @property
+    def is_started(self):
+        return self.status_code == self.START
+
+    @property
+    def is_failed(self):
+        return self.status_code == self.FAILURE
+
+    @property
+    def is_successful(self):
+        return self.status_code == self.SUCCESS
 
 
 class LoginHistory(TimestampModel):

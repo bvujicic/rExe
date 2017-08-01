@@ -48,6 +48,6 @@ def create_iteration_job(sender, instance, created, **kwargs):
     if not created:
         return
 
-    result = execute_algorithm.apply_async(task_id=instance.id)
+    result = execute_algorithm.apply_async(task_id=instance.id, kwargs={'algorithm_path': instance.algorithm.file.path})
 
     return result
