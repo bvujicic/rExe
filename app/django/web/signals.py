@@ -7,7 +7,7 @@ from django.dispatch import receiver
 
 from ipware.ip import get_ip
 
-from app.celery import execute_algorithm
+from web.tasks import execute_algorithm
 from web.models import Iteration, LoginHistory
 
 
@@ -34,7 +34,6 @@ def extract_iteration_archive(sender, instance, **kwargs):
             archive.extractall(path=os.path.dirname(instance.input_data.path))
 
     except zipfile.BadZipfile as exc:
-        print(exc)
         pass
 
 

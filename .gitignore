@@ -104,5 +104,7 @@ ENV/
 .idea
 
 # Custom
+rexe_project/
+data/
 config.yml
 db.sqlite3
