@@ -206,3 +206,6 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_IMPORTS = [
     'web.tasks'
 ]
+
+# Custom
+SUBPROCESS_TIMEOUT = 60 * 60

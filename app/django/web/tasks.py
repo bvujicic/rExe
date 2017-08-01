@@ -1,8 +1,10 @@
+import subprocess
 import sys
 import time
 
 
 import django
+from django.conf import settings
 from celery import shared_task, Task, states
 from celery.exceptions import Ignore
 
@@ -50,7 +52,20 @@ class IterationTask(Task):
 
 
 @shared_task(base=IterationTask, track_started=True, bind=True, acks_late=True)
-def execute_algorithm(self):
-    time.sleep(3)
+def execute_algorithm(self, algorithm_path):
+    """
+    Task that spawns another child process that will execute the algorithm.
 
-    raise RuntimeError()
+    :param self: Task istance
+    :param algorithm_path: Path of the executable.
+
+    :return:
+    """
+    process = subprocess.run(
+        f'python {algorithm_path}',
+        check=True,
+        shell=True,
+        timeout=settings.SUBPROCESS_TIMEOUT
+    )
+    print(vars(process))
+    print(type(process))
