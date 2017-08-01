@@ -84,12 +84,11 @@ class IterationCreateForm(forms.ModelForm):
         """
         Try to extract the ZIP file, if it fails return validation error.
         """
-        import os
         input_data = self.cleaned_data['input_data']
 
         try:
             with zipfile.ZipFile(file=input_data.file) as archive:
-                # just check if ZIP file is valida
+                # just check if ZIP file is valid
                 archive.testzip()
 
         except zipfile.BadZipFile as exc:

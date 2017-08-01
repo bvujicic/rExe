@@ -12,7 +12,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings')
 
 celery_app.conf.update(
     task_track_started=True,
-    #result_backend='db+postgresql://devel:devel@localhost/rexe'
+    result_backend='db+postgresql://devel:devel@localhost/rexe'
 )
 celery_app.config_from_object('django.conf:settings', namespace='CELERY')
 celery_app.autodiscover_tasks()

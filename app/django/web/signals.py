@@ -25,10 +25,13 @@ def save_login_ip_address(sender, request, user, **kwargs):
 
 
 @receiver(post_save, sender=Iteration)
-def extract_iteration_archive(sender, instance, **kwargs):
+def extract_iteration_archive(sender, instance, created, **kwargs):
     """
     Extract zipped input file.
     """
+    if not created:
+        return
+
     try:
         with zipfile.ZipFile(file=instance.input_data.file) as archive:
             archive.extractall(path=os.path.dirname(instance.input_data.path))
@@ -38,9 +41,13 @@ def extract_iteration_archive(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=Iteration)
-def create_iteration_job(sender, instance, **kwargs):
+def create_iteration_job(sender, instance, created, **kwargs):
     """
+    Delegates execution of algorithm to Celery worker.
     """
+    if not created:
+        return
+
     result = execute_algorithm.apply_async(task_id=instance.id)
 
     return result

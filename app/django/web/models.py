@@ -35,13 +35,13 @@ class Iteration(TimestampModel):
     """
     A single iteration of algorith execution and all connected input/output data.
     """
-    RUNNING = 1
-    ABORTED = 2
-    PASSED = 3
+    START = 1
+    FAILURE = 2
+    SUCCESS = 3
     STATUS_CHOICES = (
-        (RUNNING, _('u tijeku')),
-        (ABORTED, _('prekinut')),
-        (PASSED, _('završen')),
+        (START, _('pokrenuto')),
+        (FAILURE, _('neuspješno završeno')),
+        (SUCCESS, _('uspješno završeno')),
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     input_data = models.FileField(verbose_name=_('ulazni podaci'), upload_to=upload_path_input_data)
