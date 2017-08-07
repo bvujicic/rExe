@@ -1,12 +1,15 @@
 from django.contrib import messages
-from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as BaseLogoutView
+from django.contrib.auth.views import (
+    LoginView as BaseLoginView, LogoutView as BaseLogoutView, PasswordResetView as BasePasswordResetView,
+    PasswordResetConfirmView as BasePasswordResetConfirmView
+)
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, CreateView, FormView, DetailView
 
 
-from web.forms import AuthenticationForm, IterationCreateForm, RegistrationForm
+from web.forms import AuthenticationForm, IterationCreateForm, RegistrationForm, PasswordResetForm, SetPasswordForm
 from web.models import Iteration
 
 
@@ -15,7 +18,7 @@ class LoginView(BaseLoginView):
     GET: Renders login form.
     POST: Processes form and logs user in.
     """
-    template_name = 'login.html'
+    template_name = 'users/login.html'
     form_class = AuthenticationForm
 
 
@@ -30,13 +33,49 @@ class RegisterView(FormView):
     GET:
     POST:
     """
-    template_name = 'register.html'
+    template_name = 'users/register.html'
     form_class = RegistrationForm
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
         form.save()
         messages.add_message(self.request, level=messages.INFO, message=_('Potvrda o registracija poslana na e-mail.'))
+
+        return super().form_valid(form)
+
+
+class PasswordResetView(BasePasswordResetView):
+    """
+    GET:
+    POST:
+    """
+    template_name = 'users/password_reset.html'
+    form_class = PasswordResetForm
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        messages.add_message(self.request, level=messages.INFO, message=_('Aktivacijski link poslan na e-mail adresu.'))
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, level=messages.INFO, message=_('Nepostojeća e-mail adresa.'))
+
+        return super().form_invalid(form)
+
+
+class PasswordResetConfirmView(BasePasswordResetConfirmView):
+    """
+    GET:
+    POST:
+    """
+    INTERNAL_RESET_URL_TOKEN = 'nova'
+    template_name = 'users/password_confirm.html'
+    form_class = SetPasswordForm
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        messages.add_message(self.request, level=messages.INFO, message=_('Lozinka promijenjena.'))
 
         return super().form_valid(form)
 

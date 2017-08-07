@@ -1,8 +1,11 @@
 import zipfile
 
 from django import forms
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm, UserCreationForm
+from django.contrib.auth import get_user_model, password_validation
+from django.contrib.auth.forms import (
+    AuthenticationForm as BaseAuthenticationForm, PasswordResetForm as BasePasswordResetForm,
+    SetPasswordForm as BaseSetPasswordForm, UserCreationForm
+)
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
@@ -19,8 +22,38 @@ class AuthenticationForm(BaseAuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['username'].widget = forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Korisničko ime'})
+        self.fields['username'].widget = forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Email'})
         self.fields['password'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': 'Lozinka'})
+
+
+class PasswordResetForm(BasePasswordResetForm):
+    """
+    Add classes to input fields.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['email'].widget = forms.EmailInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Email'})
+
+
+class SetPasswordForm(BaseSetPasswordForm):
+    """
+    Add classes to input fields.
+    """
+    error_messages = {
+        'password_mismatch': _('Lozinke ne odgovaraju.'),
+    }
+    new_password1 = forms.CharField(
+        label=_('Lozinka'),
+        widget=forms.PasswordInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Lozinka'}),
+        strip=False,
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+    new_password2 = forms.CharField(
+        label=_('Ponovi lozinku'),
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Ponovi lozinku'}),
+    )
 
 
 class RegistrationForm(UserCreationForm):
