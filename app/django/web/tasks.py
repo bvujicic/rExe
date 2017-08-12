@@ -2,7 +2,6 @@ import subprocess
 import sys
 import time
 
-
 import django
 from django.conf import settings
 from celery import shared_task, Task, states
@@ -10,6 +9,10 @@ from celery.exceptions import Ignore
 
 from app.celery import celery_logger
 
+
+@shared_task()
+class send_mail():
+    pass
 
 
 class IterationTask(Task):

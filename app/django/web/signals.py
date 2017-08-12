@@ -2,13 +2,14 @@ import os
 import zipfile
 
 from django.contrib.auth.signals import user_logged_in
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 from ipware.ip import get_ip
 
 from web.tasks import execute_algorithm
 from web.models import Iteration, LoginHistory
+from web.service import extract_archive, create_archive
 
 
 @receiver(user_logged_in)
@@ -24,23 +25,29 @@ def save_login_ip_address(sender, request, user, **kwargs):
         pass
 
 
-@receiver(post_save, sender=Iteration)
-def extract_iteration_archive(sender, instance, created, **kwargs):
+@receiver(pre_save, sender=Iteration)
+def archive_iteration_output_data(sender, instance, **kwargs):
     """
-    Extract zipped input file.
+    Extract archived input file.
+    """
+    if instance is None:
+        return
+
+    create_archive(iteration=instance)
+
+
+@receiver(post_save, sender=Iteration)
+def extract_iteration_input_data(sender, instance, created, **kwargs):
+    """
+    Extract archived input file.
     """
     if not created:
         return
 
-    try:
-        with zipfile.ZipFile(file=instance.input_data.file) as archive:
-            archive.extractall(path=os.path.dirname(instance.input_data.path))
-
-    except zipfile.BadZipfile as exc:
-        pass
+    extract_archive(file_name=instance.input_data.path)
 
 
-@receiver(post_save, sender=Iteration)
+#@receiver(post_save, sender=Iteration)
 def create_iteration_job(sender, instance, created, **kwargs):
     """
     Delegates execution of algorithm to Celery worker.

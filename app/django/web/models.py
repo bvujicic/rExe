@@ -15,7 +15,7 @@ class Algorithm(TimestampModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(verbose_name=_('naziv'), max_length=255)
-    file = models.FileField(verbose_name=_('datoteka za izvršenje'), upload_to=upload_path_exe)
+    file = models.FileField(verbose_name=_('datoteka za izvršavanje'), upload_to=upload_path_exe)
     description = models.TextField(verbose_name=_('opis'), blank=True)
     document = models.FileField(verbose_name=_('dokumentacija'), blank=True, upload_to=upload_path_exe)
 
@@ -36,10 +36,10 @@ class Iteration(TimestampModel):
     A single iteration of algorith execution and all connected input/output data.
     """
     START = 1
-    FAILURE = 2
-    SUCCESS = 3
+    FAILURE = -1
+    SUCCESS = 0
     STATUS_CHOICES = (
-        (START, _('pokrenuto')),
+        (START, _('izvršavanje u tijeku')),
         (FAILURE, _('neuspješno završeno')),
         (SUCCESS, _('uspješno završeno')),
     )
@@ -54,6 +54,8 @@ class Iteration(TimestampModel):
         default=START
     )
     status_message = models.TextField(verbose_name=_('statusna poruka'), blank=True)
+    mail_on_completion = models.BooleanField(verbose_name=_('pošalji rezultate na mail'), default=False)
+    mailed = models.DateTimeField(verbose_name=_('poslano'), null=True)
 
     algorithm = models.ForeignKey(to='web.Algorithm', verbose_name=_('algoritam'), on_delete=models.PROTECT)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, verbose_name=_('korisnik'), on_delete=models.PROTECT)
@@ -68,15 +70,15 @@ class Iteration(TimestampModel):
         return str(self.id)
 
     @property
-    def is_started(self):
+    def started(self):
         return self.status_code == self.START
 
     @property
-    def is_failed(self):
+    def failed(self):
         return self.status_code == self.FAILURE
 
     @property
-    def is_successful(self):
+    def successful(self):
         return self.status_code == self.SUCCESS
 
 

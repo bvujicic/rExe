@@ -14,6 +14,7 @@
       <div class="table-responsive">
         <table class="table table-striped">
           <thead>
+          {% if object_list %}
             <tr>
               <th>#</th>
               <th>ID</th>
@@ -21,9 +22,13 @@
               <th>Izlazni podaci</th>
               <th>Status</th>
             </tr>
+          {% else %}
+            <tr>Još nema obrada, pokrenite obradu klikom na "Nova obrada".</tr>
+          {% endif %}
           </thead>
           <tbody>
           {% for item in object_list %}
+
             <tr>
               <td>{{ forloop.counter }}</td>
               <td><a href="{% url 'iteration' item.id %}">{{ item.id }}</a></td>
@@ -36,24 +41,8 @@
               {% elif item.is_successful %}
                 <td><span class="label label-success">{{ item.get_status_code_display|upper }}</span></td>
               {% endif %}
+            </tr>
 
-
-            </tr>
-          {% empty %}
-            <tr>
-              <td>1,002</td>
-              <td>amet</td>
-              <td>consectetur</td>
-              <td>adipiscing</td>
-              <td>elit</td>
-            </tr>
-            <tr>
-              <td>1,003</td>
-              <td>Integer</td>
-              <td>nec</td>
-              <td>odio</td>
-              <td>Praesent</td>
-            </tr>
           {% endfor %}
           </tbody>
         </table>

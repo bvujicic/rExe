@@ -38,8 +38,9 @@ class RegisterView(FormView):
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
-        form.save()
-        messages.add_message(self.request, level=messages.INFO, message=_('Potvrda o registracija poslana na e-mail.'))
+        user = form.save()
+        #user.send_mail()
+        #messages.add_message(self.request, level=messages.INFO, message=_('Potvrda o registracija poslana na e-mail.'))
 
         return super().form_valid(form)
 

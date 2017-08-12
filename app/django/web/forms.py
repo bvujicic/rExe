@@ -58,7 +58,7 @@ class SetPasswordForm(BaseSetPasswordForm):
 
 class RegistrationForm(UserCreationForm):
     """
-
+    Add attributes to input fields and email as username/email. Flags user as inactive.
     """
     first_name = forms.CharField()
     last_name = forms.CharField()
@@ -68,9 +68,9 @@ class RegistrationForm(UserCreationForm):
 
         self.fields['first_name'].widget = forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Ime'})
         self.fields['last_name'].widget = forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Prezime'})
-        self.fields['username'].widget = forms.EmailInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Email'})
-        self.fields['password1'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': 'Lozinka'})
-        self.fields['password2'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': 'Ponovi lozinku'})
+        self.fields['username'].widget = forms.EmailInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Email (obavezno)'})
+        self.fields['password1'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': 'Lozinka (obavezno)'})
+        self.fields['password2'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': 'Ponovi lozinku (obavezno)'})
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -90,25 +90,26 @@ class RegistrationForm(UserCreationForm):
             password=self.cleaned_data['password1'],
             first_name=self.cleaned_data['first_name'],
             last_name=self.cleaned_data['last_name'],
+            is_active=False
         )
-
         return user
 
 
 class IterationCreateForm(forms.ModelForm):
     """
     Add classes to input fields.
+    Extract input data.
     """
     class Meta:
         model = Iteration
-        fields = ('algorithm', 'input_data')
+        fields = ('algorithm', 'input_data', 'mail_on_completion')
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
         self.fields['algorithm'] = forms.ModelChoiceField(
-            queryset=Algorithm.objects.all(),
+            queryset=Algorithm.objects.filter(users=self.user),
             widget=forms.Select(attrs={'class': 'form-control'})
         )
         self.fields['input_data'].widget = forms.ClearableFileInput(attrs={'class': 'form-control'})
@@ -125,7 +126,7 @@ class IterationCreateForm(forms.ModelForm):
                 archive.testzip()
 
         except zipfile.BadZipFile as exc:
-            self.add_error(field='input_data', error=ValidationError(_('neispravna ZIP datoteka')))
+            self.add_error(field='input_data', error=ValidationError(_('Neispravna ZIP datoteka')))
 
         else:
             return input_data
