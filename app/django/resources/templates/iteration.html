@@ -17,7 +17,10 @@
           <h3>Opis algoritma:</h3>
           <p>{{ object.algorithm.description }}</p>
         {% endif %}
-        <h3>Vrijeme početka obrade: <strong>{{ object.created|date:"d.m.Y." }}</strong></h3>
+        <h3>Vrijeme početka izvršavanja: <strong>{{ object.created|date:"d.m.Y. H:i" }}</strong></h3>
+        {% if object.failed or object.successful %}
+          <h3>Vrijeme završetka izvršavanja: <strong>{{ object.finished|date:"d.m.Y. H:i" }}</strong></h3>
+        {% endif %}
         <h3>Status obrade: <strong>{{ object.get_status_code_display|upper }}</strong></h3>
 
         <div class="col-md-6">

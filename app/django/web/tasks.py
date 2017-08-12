@@ -4,6 +4,7 @@ import time
 
 import django
 from django.conf import settings
+from django.utils.timezone import now
 from celery import shared_task, Task, states
 from celery.exceptions import Ignore
 
@@ -30,8 +31,9 @@ class IterationTask(Task):
 
         iteration.status_code = status_code
         iteration.status_message = exception if exception is not None else ''
+        iteration.finished = now()
 
-        iteration.save(update_fields=['status_code', 'status_message'])
+        iteration.save(update_fields=['status_code', 'status_message', 'finished'])
 
     def on_success(self, retval, task_id, args, kwargs):
         """

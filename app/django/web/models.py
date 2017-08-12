@@ -18,6 +18,7 @@ class Algorithm(TimestampModel):
     file = models.FileField(verbose_name=_('datoteka za izvršavanje'), upload_to=upload_path_exe)
     description = models.TextField(verbose_name=_('opis'), blank=True)
     document = models.FileField(verbose_name=_('dokumentacija'), blank=True, upload_to=upload_path_exe)
+    is_active = models.BooleanField(verbose_name=_('aktivno'), default=True, help_text=_('Deaktivirati kako se ne bi davala korisnicima na izbor.'))
 
     users = models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name=_('korisnici s pristupom'), blank=True)
 
@@ -56,6 +57,7 @@ class Iteration(TimestampModel):
     status_message = models.TextField(verbose_name=_('statusna poruka'), blank=True)
     mail_on_completion = models.BooleanField(verbose_name=_('pošalji rezultate na mail'), default=False)
     mailed = models.DateTimeField(verbose_name=_('poslano'), null=True)
+    finished = models.DateTimeField(verbose_name=_('završetak'), null=True)
 
     algorithm = models.ForeignKey(to='web.Algorithm', verbose_name=_('algoritam'), on_delete=models.PROTECT)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, verbose_name=_('korisnik'), on_delete=models.PROTECT)

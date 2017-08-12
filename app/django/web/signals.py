@@ -1,3 +1,4 @@
+import logging
 import os
 import zipfile
 
@@ -12,6 +13,9 @@ from web.models import Iteration, LoginHistory
 from web.service import extract_archive, create_archive
 
 
+logger = logging.getLogger('web')
+
+
 @receiver(user_logged_in)
 def save_login_ip_address(sender, request, user, **kwargs):
     """
@@ -19,10 +23,12 @@ def save_login_ip_address(sender, request, user, **kwargs):
     """
     try:
         ip_address = get_ip(request=request)
-        LoginHistory.objects.create(user=user, address=ip_address)
+        http_user_agent = request.META.get('HTTP_USER_AGENT', '')
 
-    except Exception:
-        pass
+        LoginHistory.objects.create(user=user, address=ip_address, data=http_user_agent)
+
+    except Exception as exc:
+        logger.exception(exc)
 
 
 @receiver(pre_save, sender=Iteration)
