@@ -60,7 +60,7 @@ def archive_iteration_output_data(sender, instance, **kwargs):
     create_archive(iteration=instance)
 
 
-#@receiver(post_save, sender=Iteration)
+@receiver(post_save, sender=Iteration)
 def create_iteration_job(sender, instance, created, **kwargs):
     """
     Delegates execution of algorithm to Celery worker.

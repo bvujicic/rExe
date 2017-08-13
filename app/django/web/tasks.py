@@ -9,9 +9,10 @@ from celery import shared_task, Task, states
 from celery.exceptions import Ignore
 
 from app.celery import celery_logger
+from web.service import create_archive
 
 
-@shared_task()
+
 class send_mail():
     pass
 
@@ -19,15 +20,18 @@ class send_mail():
 class IterationTask(Task):
 
     @staticmethod
-    def _update_iteration(task_id, status_code, exception=None):
+    def _iteration(task_id):
+        django.setup()
+        from web.models import Iteration
+
+        return Iteration.objects.get(id=task_id)
+
+    def _update_iteration(self, task_id, status_code, exception=None):
         """
         :param task_id: Iteration ID to retrieve
         :param code: Status code of Iteration
         """
-        django.setup()
-        from web.models import Iteration
-
-        iteration = Iteration.objects.get(id=task_id)
+        iteration = self._iteration(task_id)
 
         iteration.status_code = status_code
         iteration.status_message = exception if exception is not None else ''
@@ -44,6 +48,7 @@ class IterationTask(Task):
 
         print('success')
         self._update_iteration(task_id=task_id, status_code=Iteration.SUCCESS)
+        create_archive(iteration=self._iteration(task_id))
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         """
@@ -67,10 +72,7 @@ def execute_algorithm(self, algorithm_path):
     :return:
     """
     process = subprocess.run(
-        f'python {algorithm_path}',
+        algorithm_path,
         check=True,
-        shell=True,
         timeout=settings.SUBPROCESS_TIMEOUT
     )
-    print(vars(process))
-    print(type(process))
