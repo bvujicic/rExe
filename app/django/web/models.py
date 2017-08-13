@@ -1,7 +1,9 @@
 import uuid
 
 from django.conf import settings
+from django.utils.functional import cached_property
 from django.db import models
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
 from django_utils.abstract import TimestampModel
@@ -18,7 +20,7 @@ class Algorithm(TimestampModel):
     file = models.FileField(verbose_name=_('datoteka za izvršavanje'), upload_to=upload_path_exe)
     description = models.TextField(verbose_name=_('opis'), blank=True)
     document = models.FileField(verbose_name=_('dokumentacija'), blank=True, upload_to=upload_path_exe)
-    is_active = models.BooleanField(verbose_name=_('aktivno'), default=True, help_text=_('Deaktivirati kako se ne bi davala korisnicima na izbor.'))
+    is_active = models.BooleanField(verbose_name=_('aktivno'), default=True, help_text=_('Deaktivirati algoritam umjesto brisanja.'))
 
     users = models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name=_('korisnici s pristupom'), blank=True)
 
@@ -82,6 +84,34 @@ class Iteration(TimestampModel):
     @property
     def successful(self):
         return self.status_code == self.SUCCESS
+
+    @cached_property
+    def iteration_number(self):
+        manager = self.__class__.objects
+
+        if self.created is None:
+            number = manager.filter(algorithm=self.algorithm, user=self.user, created__lte=now()).count() + 1
+        else:
+            number = manager.filter(algorithm=self.algorithm, user=self.user, created__lte=self.created).count()
+
+        return number
+
+    @property
+    def input_directory(self):
+        return self._data_directory('in')
+
+    @property
+    def output_directory(self):
+        return self._data_directory('out')
+
+    def _data_directory(self, location):
+        return '{media_root}/{app}/{user_id}/{iteration_number}/{location}'.format(
+            media_root=settings.MEDIA_ROOT,
+            app=self.algorithm,
+            user_id=self.user_id,
+            iteration_number=self.iteration_number,
+            location=location
+        )
 
 
 class LoginHistory(TimestampModel):

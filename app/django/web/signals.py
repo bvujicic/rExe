@@ -10,7 +10,7 @@ from ipware.ip import get_ip
 
 from web.tasks import execute_algorithm
 from web.models import Iteration, LoginHistory
-from web.service import extract_archive, create_archive
+from web.service import extract_archive, create_archive, _prepare_directories
 
 
 logger = logging.getLogger('web')
@@ -32,14 +32,12 @@ def save_login_ip_address(sender, request, user, **kwargs):
 
 
 @receiver(pre_save, sender=Iteration)
-def archive_iteration_output_data(sender, instance, **kwargs):
+def prepare_directories(sender, instance, **kwargs):
     """
-    Extract archived input file.
+    Prepare directory structure for the iteration.
     """
-    if instance is None:
-        return
-
-    create_archive(iteration=instance)
+    if instance._state.adding:
+        _prepare_directories(iteration=instance)
 
 
 @receiver(post_save, sender=Iteration)
@@ -47,10 +45,19 @@ def extract_iteration_input_data(sender, instance, created, **kwargs):
     """
     Extract archived input file.
     """
-    if not created:
+    if created:
+        extract_archive(iteration=instance)
+
+
+@receiver(pre_save, sender=Iteration)
+def archive_iteration_output_data(sender, instance, **kwargs):
+    """
+    Create archive from output data.
+    """
+    if instance._state.adding:
         return
 
-    extract_archive(file_name=instance.input_data.path)
+    create_archive(iteration=instance)
 
 
 #@receiver(post_save, sender=Iteration)

@@ -3,26 +3,20 @@ import os
 import shutil
 import zipfile
 
+from django.conf import settings
+
 
 logger = logging.getLogger('web')
 
 
-def _app_folder(instance):
-    return 'app_{app_id}'.format(app_id=instance.id.hex)
+def _app_folder(algorithm):
+    return '{media_root}/{app_name}'.format(media_root=settings.MEDIA_ROOT, app_name=algorithm.name)
 
 
-def _archive_folder(iteration, location, filename):
-    from web.models import Iteration
+def _prepare_directories(iteration):
+    os.makedirs('{input_directory}/archive'.format(input_directory=iteration.input_directory), exist_ok=True)
+    os.makedirs('{output_directory}/archive'.format(output_directory=iteration.output_directory), exist_ok=True)
 
-    iteration_count = Iteration.objects.filter(user=iteration.user).count() + 1
-
-    return '{app_folder}/{user_id}/{iteration_count}/{location}/archive/{filename}'.format(
-        app_folder=_app_folder(iteration.algorithm),
-        user_id=iteration.user.id,
-        iteration_count=iteration_count,
-        location=location,
-        filename=filename
-    )
 
 def upload_path_exe(instance, filename):
     """
@@ -36,19 +30,20 @@ def upload_path_exe(instance, filename):
 
 
 def upload_path_input_data(instance, filename):
-    return _archive_folder(iteration=instance, location='in', filename=filename)
+    return '{input_directory}/archive/{filename}'.format(input_directory=instance.input_directory, filename=filename)
 
 
-def extract_archive(*, file_name):
+def extract_archive(*, iteration):
     """
     Extracts archive to specified location. If it's a bad archive file ignore silently and log the error.
 
     :param file_name: (str) Path to which directory to extract.
     :return:
     """
+    file_name = iteration.input_data.path
     try:
         with zipfile.ZipFile(file=file_name) as archive:
-            archive.extractall(path=os.path.join(os.path.dirname(file_name), os.pardir))
+            archive.extractall(path=iteration.input_directory)
 
     except zipfile.BadZipFile as exc:
         logger.error('Bad ZIP file.')
@@ -66,13 +61,15 @@ def create_archive(*, iteration):
     :param folder_path:
     :return:
     """
-    folder_path = os.path.abspath(_archive_folder(iteration=iteration, location='out', filename='results.zip'))
-    #os.mkdir(os.path.dirname(folder_path))
+    filename = '{output_directory}/archive/results.zip'.format(output_directory=iteration.output_directory)
     try:
-        with zipfile.ZipFile(file=folder_path, mode='w') as archive:
-            for root, dir, files in os.walk(folder_path):
+        with zipfile.ZipFile(file=filename, mode='w') as archive:
+            for root, dir, files in os.walk(iteration.output_directory):
+                if root == os.path.dirname(filename):
+                    continue
+
                 for file in files:
-                    archive.write(os.path.join(root, file))
+                    archive.write(filename=os.path.join(root, file))
 
     except Exception as exc:
         logger.exception(exc)

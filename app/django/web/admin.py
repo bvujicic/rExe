@@ -7,7 +7,7 @@ from web.models import Algorithm, Iteration, LoginHistory
 @admin.register(Algorithm)
 class AlgorithmAdmin(admin.ModelAdmin):
     list_display = ('name', 'file', 'is_active')
-    fields = ('',)
+    fields = ('name', 'file', 'is_active', 'document', 'description', 'users')
     exclude = ('id',)
     filter_horizontal = ('users',)
 
