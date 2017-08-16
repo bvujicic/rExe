@@ -64,7 +64,10 @@ def create_archive(*, iteration):
     :param folder_path:
     :return:
     """
-    filename = '{output_directory}/archive/results.zip'.format(output_directory=iteration.output_directory)
+    filename = '{media_root}/{output_directory}/archive/results.zip'.format(
+        media_root=settings.MEDIA_ROOT,
+        output_directory=iteration.output_directory
+    )
     try:
         with zipfile.ZipFile(file=filename, mode='w') as archive:
             for root, dir, files in os.walk(iteration.output_directory):

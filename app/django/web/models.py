@@ -3,6 +3,7 @@ import uuid
 from django.conf import settings
 from django.utils.functional import cached_property
 from django.db import models
+from django.utils.text import slugify
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
@@ -105,8 +106,8 @@ class Iteration(TimestampModel):
         return self._data_directory('out')
 
     def _data_directory(self, location):
-        return '{app}/{user_id}/{iteration_number}/{location}'.format(
-            app=self.algorithm,
+        return 'app_{app_name}/{user_id}/{iteration_number}/{location}'.format(
+            app_name=slugify(self.algorithm.name, allow_unicode=False),
             user_id=self.user_id,
             iteration_number=self.iteration_number,
             location=location
