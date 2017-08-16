@@ -16,10 +16,10 @@ class AlgorithmAdmin(admin.ModelAdmin):
 class IterationAdmin(admin.ModelAdmin):
     list_display = ('id', 'input_data', 'output_data', 'status_code', 'algorithm', 'user')
     exclude = ('id', 'finished')
-    readonly_fields = (
-        'algorithm', 'user', 'status_code', 'status_message', 'created_time', 'finished_time', 'input_data',
-        'output_data', 'mail_on_completion', 'mailed'
-    )
+    # readonly_fields = (
+    #     'algorithm', 'user', 'status_code', 'status_message', 'created_time', 'finished_time', 'input_data',
+    #     'output_data', 'mail_on_completion', 'mailed'
+    # )
     search_fields = ['user__email']
 
     def created_time(self, obj):

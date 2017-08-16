@@ -9,13 +9,15 @@ from django.conf import settings
 logger = logging.getLogger('web')
 
 
-def _app_folder(algorithm):
-    return '{media_root}/{app_name}'.format(media_root=settings.MEDIA_ROOT, app_name=algorithm.name)
-
-
 def _prepare_directories(iteration):
-    os.makedirs('{input_directory}/archive'.format(input_directory=iteration.input_directory), exist_ok=True)
-    os.makedirs('{output_directory}/archive'.format(output_directory=iteration.output_directory), exist_ok=True)
+    os.makedirs('{media_root}/{input_directory}/archive'.format(
+        media_root=settings.MEDIA_ROOT,
+        input_directory=iteration.input_directory
+    ), exist_ok=True)
+    os.makedirs('{media_root}/{output_directory}/archive'.format(
+        media_root=settings.MEDIA_ROOT,
+        output_directory=iteration.output_directory
+    ), exist_ok=True)
 
 
 def upload_path_exe(instance, filename):
@@ -26,7 +28,7 @@ def upload_path_exe(instance, filename):
     :param filename:
     :return:
     """
-    return '{app_folder}/{filename}'.format(app_folder=_app_folder(instance), filename=filename)
+    return '{app_name}/{filename}'.format(app_name=instance.name, filename=filename)
 
 
 def upload_path_input_data(instance, filename):
@@ -43,7 +45,7 @@ def extract_archive(*, iteration):
     file_name = iteration.input_data.path
     try:
         with zipfile.ZipFile(file=file_name) as archive:
-            archive.extractall(path=iteration.input_directory)
+            archive.extractall(path=os.path.join(settings.MEDIA_ROOT, iteration.input_directory))
 
     except zipfile.BadZipFile as exc:
         logger.error('Bad ZIP file.')

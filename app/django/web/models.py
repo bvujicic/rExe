@@ -105,8 +105,7 @@ class Iteration(TimestampModel):
         return self._data_directory('out')
 
     def _data_directory(self, location):
-        return '{media_root}/{app}/{user_id}/{iteration_number}/{location}'.format(
-            media_root=settings.MEDIA_ROOT,
+        return '{app}/{user_id}/{iteration_number}/{location}'.format(
             app=self.algorithm,
             user_id=self.user_id,
             iteration_number=self.iteration_number,
