@@ -4,6 +4,7 @@ import shutil
 import zipfile
 
 from django.conf import settings
+from django.utils.text import slugify
 
 
 logger = logging.getLogger('web')
@@ -28,7 +29,7 @@ def upload_path_exe(instance, filename):
     :param filename:
     :return:
     """
-    return '{app_name}/{filename}'.format(app_name=instance.name, filename=filename)
+    return 'app_{app_name}/{filename}'.format(app_name=slugify(instance.name, allow_unicode=False), filename=filename)
 
 
 def upload_path_input_data(instance, filename):
