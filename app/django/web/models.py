@@ -20,7 +20,8 @@ class Algorithm(TimestampModel):
     name = models.CharField(verbose_name=_('naziv'), max_length=255, unique=True)
     file = models.FileField(verbose_name=_('datoteka za izvršavanje'), upload_to=upload_path_exe)
     description = models.TextField(verbose_name=_('opis'), blank=True)
-    document = models.FileField(verbose_name=_('dokumentacija'), blank=True, upload_to=upload_path_exe)
+    document = models.FileField(verbose_name=_('datoteka dokumentacije'), blank=True, upload_to=upload_path_exe)
+    source = models.FileField(verbose_name=_('datoteka source kȏda'), blank=True, upload_to=upload_path_exe)
     is_active = models.BooleanField(
         verbose_name=_('aktivno'),
         default=True,
