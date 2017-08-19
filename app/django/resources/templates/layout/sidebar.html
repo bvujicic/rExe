@@ -1,6 +1,8 @@
-    <div class="col-sm-3 col-md-2 sidebar">
-      <ul class="nav nav-sidebar">
-        <li class="active"><a href="{% url 'home' %}">Rezultati <span class="sr-only">(current)</span></a></li>
-        <li><a href="{% url 'iteration_create' %}">Nova obrada</a></li>
-      </ul>
-    </div>
+{% load filters %}s
+
+<div class="col-sm-3 col-md-2 sidebar">
+  <ul class="nav nav-sidebar">
+    <li class="{{ request|active_view:'home' }}"><a href="{% url 'home' %}">Rezultati <span class="sr-only">(current)</span></a></li>
+    <li class="{{ request|active_view:'iteration_create' }}"><a href="{% url 'iteration_create' %}">Nova obrada</a></li>
+  </ul>
+</div>
