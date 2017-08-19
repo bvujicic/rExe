@@ -36,6 +36,10 @@
           {% endif %}
         </div>
       </div>
+      {% if object.status_message %}
+      <h3>Statusna poruka:</h3>
+      <p>{{ object.status_message }}</p>
+      {% endif %}
     </div>
   </div>
 </div>
