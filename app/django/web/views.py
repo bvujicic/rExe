@@ -11,12 +11,13 @@ from django.views.generic import ListView, CreateView, FormView, DetailView
 
 from web.forms import AuthenticationForm, IterationCreateForm, RegistrationForm, PasswordResetForm, SetPasswordForm
 from web.models import Iteration
+from web.service import add_user_access
 
 
 class LoginView(BaseLoginView):
     """
     GET: Renders login form.
-    POST: Processes form and logs user in.
+    POST: Processes form and logs User in.
     """
     template_name = 'users/login.html'
     form_class = AuthenticationForm
@@ -30,8 +31,8 @@ class LogoutView(BaseLogoutView):
 
 class RegisterView(FormView):
     """
-    GET:
-    POST:
+    GET: Renders registration form.
+    POST: Processes registration form and creates and persists a User instance.
     """
     template_name = 'users/register.html'
     form_class = RegistrationForm
@@ -39,16 +40,17 @@ class RegisterView(FormView):
 
     def form_valid(self, form):
         user = form.save()
-        #user.send_mail()
-        #messages.add_message(self.request, level=messages.INFO, message=_('Potvrda o registracija poslana na e-mail.'))
+        add_user_access(user=user)
+
+        messages.add_message(self.request, level=messages.INFO, message=_('Registracija uspješna.'))
 
         return super().form_valid(form)
 
 
 class PasswordResetView(BasePasswordResetView):
     """
-    GET:
-    POST:
+    GET: Renders password reset form email.
+    POST: Processes form and send a reset link.
     """
     template_name = 'users/password_reset.html'
     form_class = PasswordResetForm
@@ -60,15 +62,15 @@ class PasswordResetView(BasePasswordResetView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.add_message(self.request, level=messages.INFO, message=_('Nepostojeća e-mail adresa.'))
+        messages.add_message(self.request, level=messages.ERROR, message=_('Nepostojeća e-mail adresa.'))
 
         return super().form_invalid(form)
 
 
 class PasswordResetConfirmView(BasePasswordResetConfirmView):
     """
-    GET:
-    POST:
+    GET: Renders password change form.
+    POST: Processes form and resets password.
     """
     INTERNAL_RESET_URL_TOKEN = 'nova'
     template_name = 'users/password_confirm.html'
@@ -89,13 +91,16 @@ class HomeView(LoginRequiredMixin, ListView):
     model = Iteration
 
     def get_queryset(self):
+        """
+        Renders Iterations specific to logged in user.
+        """
         return super().get_queryset().filter(user=self.request.user)
 
 
 class IterationCreateView(LoginRequiredMixin, CreateView):
     """
-    GET: Render form to create an iteration job.
-    POST: Process form and create Iteration instance.
+    GET: Renders form to create Iteration.
+    POST: Processes form and creates Iteration instance.
     """
     template_name = 'create_iteration.html'
     model = Iteration
@@ -111,7 +116,7 @@ class IterationCreateView(LoginRequiredMixin, CreateView):
 
 class IterationView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     """
-    GET: Renders Iteration details. Returns 403 if logged user is not related to Iteration.
+    GET: Renders Iteration details. Returns 403 if logged user is not parent to Iteration.
     """
     template_name = 'iteration.html'
     model = Iteration

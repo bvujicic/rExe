@@ -90,7 +90,7 @@ class RegistrationForm(UserCreationForm):
             password=self.cleaned_data['password1'],
             first_name=self.cleaned_data['first_name'],
             last_name=self.cleaned_data['last_name'],
-            is_active=False
+            is_active=True
         )
         return user
 

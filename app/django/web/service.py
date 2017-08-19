@@ -79,3 +79,18 @@ def create_archive(*, iteration):
 
     except Exception as exc:
         logger.exception(exc)
+
+
+def add_user_access(*, user):
+    """
+    Scans all algorithms and creates access for this user to those that have set auto_add flag.
+
+    :param user: (User)
+    :return:
+    """
+    from web.models import Algorithm
+
+    for algorithm in Algorithm.objects.all():
+        if algorithm.auto_add:
+            # add this user to user list
+            algorithm.users.add(user)

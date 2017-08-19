@@ -21,8 +21,16 @@ class Algorithm(TimestampModel):
     file = models.FileField(verbose_name=_('datoteka za izvršavanje'), upload_to=upload_path_exe)
     description = models.TextField(verbose_name=_('opis'), blank=True)
     document = models.FileField(verbose_name=_('dokumentacija'), blank=True, upload_to=upload_path_exe)
-    is_active = models.BooleanField(verbose_name=_('aktivno'), default=True, help_text=_('Deaktivirati algoritam umjesto brisanja.'))
-
+    is_active = models.BooleanField(
+        verbose_name=_('aktivno'),
+        default=True,
+        help_text=_('Neaktivan algoritam se neće prikazivati kao opcija korisnicima.')
+    )
+    auto_add = models.BooleanField(
+        verbose_name=_('automatski pristup korisnicima'),
+        default=True,
+        help_text=_('Omogućiti kako bi se novi registrirani korisnici automatski dodali u listu korisnika s pristupom.')
+    )
     users = models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name=_('korisnici s pristupom'), blank=True)
 
     class Meta:
