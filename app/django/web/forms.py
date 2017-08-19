@@ -114,22 +114,22 @@ class IterationCreateForm(forms.ModelForm):
         )
         self.fields['input_data'].widget = forms.ClearableFileInput(attrs={'class': 'form-control'})
 
-    def clean_input_data(self):
-        """
-        Try to extract the ZIP file, if it fails return validation error.
-        """
-        input_data = self.cleaned_data['input_data']
-
-        try:
-            with zipfile.ZipFile(file=input_data.file) as archive:
-                # just check if ZIP file is valid
-                archive.testzip()
-
-        except zipfile.BadZipFile as exc:
-            self.add_error(field='input_data', error=ValidationError(_('Neispravna ZIP datoteka')))
-
-        else:
-            return input_data
+    # def clean_input_data(self):
+    #     """
+    #     Try to extract the ZIP file, if it fails return validation error.
+    #     """
+    #     input_data = self.cleaned_data['input_data']
+    #
+    #     try:
+    #         with zipfile.ZipFile(file=input_data.file) as archive:
+    #             # just check if ZIP file is valid
+    #             archive.testzip()
+    #
+    #     except zipfile.BadZipFile as exc:
+    #         self.add_error(field='input_data', error=ValidationError(_('Neispravna ZIP datoteka')))
+    #
+    #     else:
+    #         return input_data
 
     def save(self, commit=True):
         """

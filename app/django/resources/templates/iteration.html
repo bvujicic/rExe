@@ -46,11 +46,26 @@
           {% endif %}
         </div>
       </div>
+
+      {% comment %}
+      ZASAD NE TREBA
+
       {% if object.status_message %}
       <h3>Statusna poruka:</h3>
       <p>{{ object.status_message }}</p>
       {% endif %}
+
+      {% endcomment %}
     </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+      <div class="col-md-3">
+        <a href="{% url 'home' %}">Povratak na sve rezultate</a>
+      </div>
   </div>
 </div>
 

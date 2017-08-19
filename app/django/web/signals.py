@@ -46,7 +46,16 @@ def extract_iteration_input_data(sender, instance, created, **kwargs):
     Extract archived input file.
     """
     if created:
-        extract_archive(iteration=instance)
+        try:
+            with zipfile.ZipFile(file=instance.input_data.file) as archive:
+                # just check if ZIP file is valid
+                archive.testzip()
+
+        except zipfile.BadZipFile as exc:
+            pass
+
+        else:
+            extract_archive(iteration=instance)
 
 
 @receiver(pre_save, sender=Iteration)
