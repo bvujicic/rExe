@@ -6,15 +6,20 @@ from web.models import Algorithm, Iteration, LoginHistory
 
 @admin.register(Algorithm)
 class AlgorithmAdmin(admin.ModelAdmin):
-    list_display = ('name', 'file', 'is_active')
-    fields = ('name', 'file', 'is_active', 'document', 'auto_add', 'description', 'users')
+    list_display = ('name', 'file', 'is_active', 'created_time')
+    fields = ('name', 'file', 'is_active', 'document', 'auto_add', 'description', 'users', 'created_time')
     exclude = ('id',)
+    readonly_fields = ('created_time',)
     filter_horizontal = ('users',)
+
+    def created_time(self, obj):
+        return obj.created.strftime('%d.%m.%Y. %H:%M')
+    created_time.short_description = _('vrijeme kreiranja')
 
 
 @admin.register(Iteration)
 class IterationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'input_data', 'output_data', 'status_code', 'algorithm', 'user')
+    list_display = ('id', 'algorithm', 'user', 'input_data', 'output_data', 'status_code', 'created_time', 'finished_time')
     exclude = ('id', 'finished')
     # readonly_fields = (
     #     'algorithm', 'user', 'status_code', 'status_message', 'created_time', 'finished_time', 'input_data',
@@ -27,7 +32,11 @@ class IterationAdmin(admin.ModelAdmin):
     created_time.short_description = _('početak')
 
     def finished_time(self, obj):
-        return obj.finished.strftime('%d.%m.%Y. %H:%M')
+        try:
+            return obj.finished.strftime('%d.%m.%Y. %H:%M')
+        except AttributeError:
+            return None
+
     finished_time.short_description = _('završetak')
 
 
