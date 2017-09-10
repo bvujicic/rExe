@@ -35,14 +35,22 @@
 
         <div class="col-md-6">
           <h3>Ulazni podaci:</h3>
-          <a href="{{ object.input_data.url }}">{{ object.input_data }}</a>
+          {% if object.input_is_image %}
+          <a href="{{ object.input_data.url }}" target="_blank"><img src="{{ object.input_data.url }}" alt="" style="width: 100%; height: 100%;"></a>
+          {% else %}
+            <a href="{{ object.input_data.url }}">{{ object.input_data }}</a>
+          {% endif %}
         </div>
         <div class="col-md-6">
           <h3>Izlazni podaci:</h3>
-          {% if object.output_data %}
-          <a href="{{ object.output_data.url }}">{{ object.output_data }}</a>
+          {% if object.output_is_image %}
+          <a href="{{ object.input_data.url }}" target="_blank"><img src="{{ object.output_data.url }}" alt="" style="width: 100%; height: 100%;"></a>
           {% else %}
-          <p>Još nisu generirani.</p>
+            {% if object.output_data %}
+            <a href="{{ object.output_data.url }}">{{ object.output_data }}</a>
+            {% else %}
+            <p>Još nisu generirani.</p>
+            {% endif %}
           {% endif %}
         </div>
       </div>

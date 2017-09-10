@@ -52,7 +52,7 @@ def extract_iteration_input_data(sender, instance, created, **kwargs):
                 archive.testzip()
 
         except zipfile.BadZipFile as exc:
-            pass
+            logger.info('Not a ZIP file. Skipping extraction.')
 
         else:
             extract_archive(iteration=instance)

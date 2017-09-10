@@ -4,6 +4,11 @@ from django.utils.translation import ugettext_lazy as _
 from web.models import Algorithm, Iteration, LoginHistory
 
 
+def purge_files(self, request, queryset):
+    pass
+
+purge_files.short_description = 'Izbriši algoritme i počisti file sustav'
+
 @admin.register(Algorithm)
 class AlgorithmAdmin(admin.ModelAdmin):
     list_display = ('name', 'file', 'is_active', 'created_time')
@@ -11,6 +16,7 @@ class AlgorithmAdmin(admin.ModelAdmin):
     exclude = ('id',)
     readonly_fields = ('created_time',)
     filter_horizontal = ('users',)
+    actions = (purge_files, )
 
     def created_time(self, obj):
         return obj.created.strftime('%d.%m.%Y. %H:%M')

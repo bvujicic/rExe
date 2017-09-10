@@ -57,8 +57,8 @@ class Iteration(TimestampModel):
         (SUCCESS, _('uspješno završeno')),
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    input_data = models.FileField(verbose_name=_('ulazni podaci'), upload_to=upload_path_input_data)
-    output_data = models.FileField(verbose_name=_('izlazni podaci'), blank=True)
+    input_data = models.FileField(verbose_name=_('ulazni podaci'), upload_to=upload_path_input_data, max_length=511)
+    output_data = models.FileField(verbose_name=_('izlazni podaci'), blank=True, max_length=511)
     status_code = models.SmallIntegerField(
         verbose_name=_('statusni kod'),
         choices=STATUS_CHOICES,
@@ -82,6 +82,37 @@ class Iteration(TimestampModel):
 
     def __str__(self):
         return str(self.id)
+
+    @property
+    def input_is_image(self):
+        from PIL import Image
+
+        try:
+            image = Image.open(self.input_data)
+
+        except (OSError, ValueError) as exc:
+            # not an image
+            return False
+
+        else:
+            image.verify()
+            return True
+
+    @property
+    def output_is_image(self):
+        from PIL import Image
+
+        try:
+            image = Image.open(self.output_data)
+
+        except (OSError, ValueError):
+            # not an image
+            return False
+
+        else:
+            image.verify()
+            return True
+
 
     @property
     def started(self):
