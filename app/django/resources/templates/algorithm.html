@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+
+    {% include 'layout/sidebar.html' %}
+
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+      <h2 class="sub-header">Algoritam</h2>
+      <div class="table-responsive">
+        <h3>Naziv: <strong>{{ object.name }}</strong></h3>
+
+        <h3>Datotetka za izvršavanje: <a href="{{ object.file.url }}"><strong>{{ object.file }}</strong></a></h3>
+
+        {% if object.description %}
+          <h3>Opis algoritma:</h3>
+          <p>{{ object.description }}</p>
+        {% endif %}
+
+        {% if object.document  %}
+        <h3>Dokumentacija: <a href="{{ object.document.url }}" target="_blank">{{ object.document }}</a></h3>
+        {% endif %}
+
+        {% if object.source  %}
+        <h3>Source: <a href="{{ object.source.url }}" target="_blank">{{ object.source }}</a></h3>
+        {% endif %}
+
+      </div>
+
+      {% comment %}
+      ZASAD NE TREBA
+
+      {% if object.status_message %}
+      <h3>Statusna poruka:</h3>
+      <p>{{ object.status_message }}</p>
+      {% endif %}
+
+      {% endcomment %}
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+      <div class="col-md-3">
+        <a href="{% url 'algorithm_list' %}">Povratak na sve algoritme</a>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

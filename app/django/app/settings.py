@@ -5,13 +5,13 @@ from yml_config  import Config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-env = Config.from_yaml('config.yml')
+env = Config.from_yaml('config/config.yml')
 env.to_env()
 
 
 DEBUG = env('DJANGO_DEBUG', False)
 ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS', '*').split()
-SECRET_KEY = 'asdfsa'
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 INTERNAL_IPS = ['127.0.0.1']
 

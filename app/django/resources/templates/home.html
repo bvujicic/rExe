@@ -7,14 +7,13 @@
   <div class="row">
 
     {% include 'layout/sidebar.html' %}
-
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
+      {% if iteration_list %}
       <h2 class="sub-header">Rezultati posljednjih obrada</h2>
       <div class="table-responsive">
         <table class="table table-striped">
           <thead>
-          {% if object_list %}
             <tr>
               <th>#</th>
               <th>ID</th>
@@ -25,12 +24,9 @@
               <th>Završetak</th>
               <th>Status</th>
             </tr>
-          {% else %}
-            <tr>Još nema obrada, pokrenite obradu klikom na "Nova obrada".</tr>
-          {% endif %}
           </thead>
           <tbody>
-          {% for item in object_list %}
+          {% for item in iteration_list %}
 
             <tr>
               <td>{{ forloop.counter }}</td>
@@ -53,6 +49,33 @@
           </tbody>
         </table>
       </div>
+      {% elif algorithm_list %}
+      <h2 class="sub-header">Dostupni algoritmi</h2>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ID</th>
+              <th>Algoritam</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for item in algorithm_list %}
+
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td><a href="{% url 'algorithm' item.id %}">{{ item.id }}</a></td>
+              <td>{{ item.name }}</td>
+            </tr>
+
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <h2 class="sub-header">Trenutno nema obrada</h2>
+      {% endif %}
     </div>
   </div>
 </div>

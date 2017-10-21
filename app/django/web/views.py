@@ -10,7 +10,7 @@ from django.views.generic import ListView, CreateView, FormView, DetailView
 
 
 from web.forms import AuthenticationForm, IterationCreateForm, RegistrationForm, PasswordResetForm, SetPasswordForm
-from web.models import Iteration
+from web.models import Iteration, Algorithm
 from web.service import add_user_access
 
 
@@ -89,12 +89,36 @@ class HomeView(LoginRequiredMixin, ListView):
     """
     template_name = 'home.html'
     model = Iteration
+    context_object_name = 'iteration_list'
 
     def get_queryset(self):
         """
         Renders Iterations specific to logged in user.
         """
         return super().get_queryset().filter(user=self.request.user)
+
+
+class AlgorithmList(LoginRequiredMixin, ListView):
+    """
+    GET: Renders submenu with algoritm listings.
+    """
+    template_name = 'home.html'
+    model = Algorithm
+    context_object_name = 'algorithm_list'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(users=self.request.user, is_active=True)
+
+
+class AlgorithmDetail(LoginRequiredMixin, DetailView):
+    """
+    GET: Renders submenu with algoritm listings.
+    """
+    template_name = 'algorithm.html'
+    model = Algorithm
+
+    def get_queryset(self):
+        return super().get_queryset().filter(users=self.request.user, is_active=True)
 
 
 class IterationCreateView(LoginRequiredMixin, CreateView):
