@@ -4,6 +4,9 @@ import shutil
 import zipfile
 
 from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_text, force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.text import slugify
 
 
@@ -94,3 +97,56 @@ def add_user_access(*, user):
         if algorithm.auto_add:
             # add this user to user list
             algorithm.users.add(user)
+
+
+def send_activation_mail(*, request, user):
+    """
+    Generate activation token and construct activation URL.
+
+    :param user: (User) Registered user instance.
+    """
+    token = default_token_generator.make_token(user=user)
+    uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+
+    requested_host = request.META['HTTP_HOST']
+
+    path = reverse_lazy('register_confirm', kwargs={'uidb64': uidb64, 'token': token})
+
+    url = '{schema}://{domain}{path}'.format(schema=schema, domain=domain, path=path)
+
+    template = loader.get_template('email/registration.html')
+    message = template.render(context=Context({'url': url}))
+
+    # send activation mail
+    user.email_user(
+        subject=_('rExe portal - aktivacija korisničkog računa'),
+        message=message,
+        from_email=settings.DEFAULT_FROM_EMAIL
+    )
+
+
+def verify_activation_token(*, uidb64, token):
+    """
+    :param uidb64: (str) Base 64 of user PK.
+    :param token: (str) Hash.
+    :return: (bool) True if user verified, False otherwise.
+    """
+    user_id = force_text(urlsafe_base64_decode(uidb64))
+
+    try:
+        user = User.objects.get(pk=user_id)
+
+    except User.DoesNotExist:
+        return False
+
+    else:
+        # activate user if token is alright
+        if default_token_generator.check_token(user=user, token=token):
+            if not user.is_active:
+                user.is_active = True
+                user.save()
+
+            return True
+
+        else:
+            return False

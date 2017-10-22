@@ -11,7 +11,7 @@ from django.views.generic import ListView, CreateView, FormView, DetailView
 
 from web.forms import AuthenticationForm, IterationCreateForm, RegistrationForm, PasswordResetForm, SetPasswordForm
 from web.models import Iteration, Algorithm
-from web.service import add_user_access
+from web.service import add_user_access, send_activation_mail, verify_activation_token
 
 
 class LoginView(BaseLoginView):
@@ -41,10 +41,31 @@ class RegisterView(FormView):
     def form_valid(self, form):
         user = form.save()
         add_user_access(user=user)
+        send_activation_mail(request=self.request, user=self.object)
 
-        messages.add_message(self.request, level=messages.INFO, message=_('Registracija uspješna.'))
-
+        messages.add_message(
+            self.request,
+            level=messages.INFO,
+            message=_('Registracija uspješna. E-mail za aktivaciju poslan na {}.'.format(user.email))
+        )
         return super().form_valid(form)
+
+
+class RegisterConfirmView(View):
+    """
+    GET: Verifies activation token and activates the user. Redirects appropriately.
+    """
+    def get(self, request, *args, **kwargs):
+        token = self.kwargs.get('token', None)
+        uidb64 = self.kwargs.get('uidb64', None)
+
+        user_verified = verify_activation_token(uidb64=uidb64, token=token)
+
+        if user_verified:
+            return HttpResponseRedirect(redirect_to=settings.LOGIN_URL)
+
+        else:
+            raise Http404
 
 
 class PasswordResetView(BasePasswordResetView):

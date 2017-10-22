@@ -10,7 +10,7 @@
   <div class="col-md-4"></div>
   <div class="col-md-4">
     <form class="form-signin" action="{% url 'register' %}" method="POST">{% csrf_token %}
-      {{ form.errors}}
+
       <h2 class="form-signin-heading">Registracija</h2>
       <label for="{{ form.first_name.id_for_label }}" class="sr-only">Ime</label>
       {{ form.first_name }}
@@ -18,13 +18,34 @@
       {{ form.last_name }}
       <label for="{{ form.username.id_for_label }}" class="sr-only">Email adresa (korisničko ime)</label>
       {{ form.username }}
+      {% if form.username.errors %}
+      <div class="alert alert-danger" role="alert">
+        {{ form.username.errors }}
+      </div>
+      {% endif %}
       <br>
       <label for="{{ form.password1.id_for_label }}" class="sr-only">Lozinka</label>
       {{ form.password1 }}
+      {% if form.password1.errors %}
+      <div class="alert alert-danger" role="alert">
+      {{ form.password1.errors }}
+      </div>
+      {% endif %}
       <label for="{{ form.password2.id_for_label }}" class="sr-only">Ponovi lozinku</label>
       {{ form.password2 }}
+      {% if form.password2.errors %}
+      <div class="alert alert-danger" role="alert">
+        {{ form.password2.errors }}
+      </div>
+      {% endif %}
       <br>
       <input class="btn btn-lg btn-primary btn-block" type="submit" value="Pošalji">
+      <br>
+      {% for error in form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+          {{ error }}
+        </div>
+      {% endfor %}
     </form>
   </div>
   <div class="col-md-4"></div>

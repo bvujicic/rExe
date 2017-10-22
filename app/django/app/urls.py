@@ -3,6 +3,8 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns, static
+from django.utils.text import format_lazy
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
 import web.views as views
 
@@ -11,6 +13,15 @@ urlpatterns = [
     url(r'^login$', views.LoginView.as_view(), name='login'),
     url(r'^logout$', views.LogoutView.as_view(), name='logout'),
     url(r'^registracija$', views.RegisterView.as_view(), name='register'),
+    url(
+        # doubles braces to avoid clash between regex syntax and python formatting
+        format_lazy(
+            r'^{0}/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{{1,13}}-[0-9A-Za-z]{{1,20}})$',
+            pgettext_lazy('URL part', 'registracija')
+        ),
+        views.RegisterConfirmView.as_view(),
+        name='register_confirm'
+    ),
     url(r'^lozinka$', views.PasswordResetView.as_view(), name='password_reset'),
     url(r'^lozinka/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})$', views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 

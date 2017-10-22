@@ -22,8 +22,14 @@ class AuthenticationForm(BaseAuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['username'].widget = forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Email'})
-        self.fields['password'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': 'Lozinka'})
+        self.fields['password'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': _('Lozinka')})
+        self.fields['username'].widget = forms.TextInput(
+            attrs={
+                'autofocus': True,
+                'class': 'form-control',
+                'placeholder': _('E-mail adresa')
+            }
+        )
 
 
 class PasswordResetForm(BasePasswordResetForm):
@@ -33,7 +39,13 @@ class PasswordResetForm(BasePasswordResetForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['email'].widget = forms.EmailInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Email'})
+        self.fields['email'].widget = forms.EmailInput(
+            attrs={
+                'autofocus': True,
+                'class': 'form-control',
+                'placeholder': _('Unesite e-mail adresu')
+            }
+        )
 
 
 class SetPasswordForm(BaseSetPasswordForm):
@@ -45,14 +57,20 @@ class SetPasswordForm(BaseSetPasswordForm):
     }
     new_password1 = forms.CharField(
         label=_('Lozinka'),
-        widget=forms.PasswordInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Lozinka'}),
+        widget=forms.PasswordInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': _('Lozinka')}),
         strip=False,
         help_text=password_validation.password_validators_help_text_html(),
     )
     new_password2 = forms.CharField(
-        label=_('Ponovi lozinku'),
+        label=_('Ponovite lozinku'),
         strip=False,
-        widget=forms.PasswordInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Ponovi lozinku'}),
+        widget=forms.PasswordInput(
+            attrs={
+                'autofocus': True,
+                'class': 'form-control',
+                'placeholder': _('Ponovite lozinku')
+            }
+        ),
     )
 
 
@@ -66,11 +84,39 @@ class RegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['first_name'].widget = forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Ime'})
-        self.fields['last_name'].widget = forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Prezime'})
-        self.fields['username'].widget = forms.EmailInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder': 'Email (obavezno)'})
-        self.fields['password1'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': 'Lozinka (obavezno)'})
-        self.fields['password2'].widget = forms.PasswordInput({'class': 'form-control', 'placeholder': 'Ponovi lozinku (obavezno)'})
+        self.fields['first_name'].widget = forms.TextInput(
+            attrs={
+                'autofocus': True,
+                'class': 'form-control',
+                'placeholder': _('Ime')
+            }
+        )
+        self.fields['last_name'].widget = forms.TextInput(
+            attrs={
+                'autofocus': True,
+                'class': 'form-control',
+                'placeholder': _('Prezime')
+            }
+        )
+        self.fields['username'].widget = forms.EmailInput(
+            attrs={
+                'autofocus': True,
+                'class': 'form-control',
+                'placeholder': _('E-mail adresa')
+            }
+        )
+        self.fields['password1'].widget = forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Lozinka')
+            }
+        )
+        self.fields['password2'].widget = forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Ponovite lozinku')
+            }
+        )
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -90,7 +136,7 @@ class RegistrationForm(UserCreationForm):
             password=self.cleaned_data['password1'],
             first_name=self.cleaned_data['first_name'],
             last_name=self.cleaned_data['last_name'],
-            is_active=True
+            is_active=False
         )
         return user
 

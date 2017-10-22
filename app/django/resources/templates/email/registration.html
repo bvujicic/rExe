@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+{% load i18n %}
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+<p>{% trans 'Registrirali ste se na portal rExe.' %}</p>
+<p>{% trans 'Molimo vas za aktivaciju vaseg korisnickog racuna, slijedite link:' %}</p>
+
+<a href="{{ url }}">{{ url }}</a>
+
+</body>
+</html>
