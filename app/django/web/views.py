@@ -6,7 +6,7 @@ from django.contrib.auth.views import (
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import ListView, CreateView, FormView, DetailView
+from django.views.generic import ListView, CreateView, FormView, DetailView, View
 
 
 from web.forms import AuthenticationForm, IterationCreateForm, RegistrationForm, PasswordResetForm, SetPasswordForm
@@ -62,6 +62,8 @@ class RegisterConfirmView(View):
         user_verified = verify_activation_token(uidb64=uidb64, token=token)
 
         if user_verified:
+            messages.add_message(self.request, level=messages.INFO, message=_('Aktivacija uspješna.'))
+
             return HttpResponseRedirect(redirect_to=settings.LOGIN_URL)
 
         else:
