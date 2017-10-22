@@ -5,8 +5,9 @@ from django.contrib.auth.views import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.http import HttpResponseRedirect, Http404
 from django.views.generic import ListView, CreateView, FormView, DetailView, View
+from django.utils.translation import ugettext_lazy as _
 
 
 from web.forms import AuthenticationForm, IterationCreateForm, RegistrationForm, PasswordResetForm, SetPasswordForm
