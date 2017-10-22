@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 
 {% block nav %}
 {% endblock %}
@@ -21,9 +21,9 @@
     <form class="form-signin" action="{% url 'login' %}" method="POST">{% csrf_token %}
 
       <h2 class="form-signin-heading">Logiraj se</h2>
-      <label for="{{ form.username.id_for_label }}" class="sr-only">Email adresa</label>
+      <label for="{{ form.username.id_for_label }}" class="sr-only">{{ form.username.label }}</label>
       {{ form.username }}
-      <label for="{{ form.password.id_for_label }}" class="sr-only">Lozinka</label>
+      <label for="{{ form.password.id_for_label }}" class="sr-only">{{ form.password.label }}</label>
       {{ form.password }}
       <br>
       <input class="btn btn-lg btn-primary btn-block" type="submit" value="Pošalji">
@@ -36,13 +36,15 @@
     </form>
     <hr>
     <div class="col-md-6">
-      <a class="btn btn-info btn-block" href="{% url 'register' %}" role="button">Registriraj novog korisnika</a>
+      <a class="btn btn-info btn-block" href="{% url 'register' %}" role="button">{% trans 'Registriraj novog korisnika' %}</a>
     </div>
     <div class="col-md-6">
-      <a class="btn btn-info btn-block" href="{% url 'password_reset' %}" role="button">Resetiraj lozinku</a>
+      <a class="btn btn-info btn-block" href="{% url 'password_reset' %}" role="button">{% trans 'Resetiraj lozinku' %}</a>
     </div>
   </div>
-  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <p>{% trans 'Promjena jezika: ' %}</p>
+  </div>
 </div>
 
 {% endblock %}
