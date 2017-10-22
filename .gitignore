@@ -108,3 +108,4 @@ rexe_project/
 data/
 config.yml
 db.sqlite3
+*.po

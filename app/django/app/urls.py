@@ -10,7 +10,8 @@ from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 import web.views as views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls)
+    url(r'^admin/', admin.site.urls),
+    url(r'^rosetta/', include('rosetta.urls'))
 ]
 
 urlpatterns += i18n_patterns(

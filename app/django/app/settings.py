@@ -1,5 +1,7 @@
 import os
 
+from django.utils.translation import ugettext_lazy as _
+
 from yml_config  import Config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -70,8 +72,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    #'cloudinary',
-    #'nucleus',
+    'rosetta',
     'web.apps.WebConfig'
 ]
 
@@ -116,7 +117,15 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 
 # Internationalization
-LANGUAGE_CODE = 'hr_HR'
+LANGUAGE_CODE = 'en'
+LANGUAGES = (
+    ('hr', _('hrvatski')),
+    ('en', _('engleski'))
+)
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
 
 TIME_ZONE = 'Europe/Zagreb'
 
