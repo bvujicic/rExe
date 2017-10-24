@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
-{% load static %}
+{% load i18n static tags %}
+{% get_current_language as current_code %}
+{% get_available_languages as languages %}
 
 <html lang="en">
   <head>
@@ -25,12 +27,19 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">rExe</a>
-          <p class="navbar-brand">{{ request.user }}</p>
+          <a class="navbar-brand" href="">rExe</a>
         </div>
+
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="{% url 'logout' %}">Logout</a></li>
+          <p class="navbar-brand">{{ request.user }}</p>
+          {% for language_code, language_value in languages %}
+            {% if language_code != current_code %}
+            <a class="navbar-brand" href="{% translate_url language_code view %}">Promjena jezika: {{ language_value }}</a>
+            {% endif %}
+          {% endfor %}
+            <a class="navbar-brand" href="{% url 'logout' %}">{% trans 'Logout' %}</a>
+
           </ul>
         </div>
       </div>
@@ -44,3 +53,16 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
   </body>
 </html>
+
+{% get_current_language as current_code %}
+{% get_available_languages as languages %}
+
+<div class="col-md-4">
+  <p>
+    {% trans 'Promjena jezika: ' %}
+      {% for language_code, language_value in languages %}
+        {% if language_code != current_code %}
+          <a href="{% translate_url language_code view %}">{{ language_value }}</a>
+        {% endif %}
+      {% endfor %}
+  </p>
