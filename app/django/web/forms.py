@@ -53,7 +53,7 @@ class SetPasswordForm(BaseSetPasswordForm):
     Add classes to input fields.
     """
     error_messages = {
-        'password_mismatch': _('Lozinke ne odgovaraju.'),
+        'password_mismatch': _('Lozinke ne odgovaraju'),
     }
     new_password1 = forms.CharField(
         label=_('Lozinka'),
@@ -127,7 +127,7 @@ class RegistrationForm(UserCreationForm):
             return username
 
         else:
-            self.add_error(field='username', error=ValidationError(_('Korisnik s navedenom e-mail adresom već postoji.')))
+            self.add_error(field='username', error=ValidationError(_('Korisnik s navedenom e-mail adresom već postoji')))
 
     def save(self, commit=True):
         user = User.objects.create_user(

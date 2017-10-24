@@ -20,7 +20,7 @@ class AlgorithmAdmin(admin.ModelAdmin):
 
     def created_time(self, obj):
         return obj.created.strftime('%d.%m.%Y. %H:%M')
-    created_time.short_description = _('vrijeme kreiranja')
+    created_time.short_description = 'vrijeme kreiranja'
 
 
 @admin.register(Iteration)
@@ -34,16 +34,18 @@ class IterationAdmin(admin.ModelAdmin):
     search_fields = ['user__email']
 
     def created_time(self, obj):
-        return obj.created.strftime('%d.%m.%Y. %H:%M')
-    created_time.short_description = _('početak')
+        return '{:%d.%m.%Y. %H:%M}'.format(obj.created)
+        # return obj.created.strftime('%d.%m.%Y. %H:%M')
+    created_time.short_description = 'početak'
 
     def finished_time(self, obj):
         try:
-            return obj.finished.strftime('%d.%m.%Y. %H:%M')
+            return '{:%d.%m.%Y. %H:%M}'.format(obj.finished)
+            # return obj.finished.strftime('%d.%m.%Y. %H:%M')
         except AttributeError:
             return None
 
-    finished_time.short_description = _('završetak')
+    finished_time.short_description = 'završetak'
 
 
 @admin.register(LoginHistory)
@@ -53,5 +55,6 @@ class LoginHistoryAdmin(admin.ModelAdmin):
     search_fields = ['user__email']
 
     def created_time(self, obj):
-        return obj.created.strftime('%d.%m.%Y. %H:%M')
-    created_time.short_description = _('vrijeme')
+        return '{:%d.%m.%Y. %H:%M}'.format(obj.created)
+        # return obj.created.strftime('%d.%m.%Y. %H:%M')
+    created_time.short_description = 'vrijeme'
