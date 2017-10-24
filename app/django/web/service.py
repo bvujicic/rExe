@@ -4,13 +4,18 @@ import shutil
 import zipfile
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
+from django.core.urlresolvers import reverse
+from django.template import loader
 from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.text import slugify
+from django.utils.translation import ugettext_lazy as _
 
 
 logger = logging.getLogger('web')
+User = get_user_model()
 
 
 def _prepare_directories(iteration):
@@ -108,14 +113,13 @@ def send_activation_mail(*, request, user):
     token = default_token_generator.make_token(user=user)
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
 
-    requested_host = request.META['HTTP_HOST']
+    domain = request.META['HTTP_HOST']
+    path = reverse('register_confirm', kwargs={'uidb64': uidb64, 'token': token})
 
-    path = reverse_lazy('register_confirm', kwargs={'uidb64': uidb64, 'token': token})
-
-    url = '{schema}://{domain}{path}'.format(schema=schema, domain=domain, path=path)
+    url = 'http://{domain}{path}'.format(domain=domain, path=path)
 
     template = loader.get_template('email/registration.html')
-    message = template.render(context=Context({'url': url}))
+    message = template.render(context={'url': url})
 
     # send activation mail
     user.email_user(

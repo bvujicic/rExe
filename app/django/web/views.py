@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.views import (
     LoginView as BaseLoginView, LogoutView as BaseLogoutView, PasswordResetView as BasePasswordResetView,
@@ -5,10 +6,10 @@ from django.contrib.auth.views import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse_lazy
+from django.db.transaction import atomic
 from django.http import HttpResponseRedirect, Http404
 from django.views.generic import ListView, CreateView, FormView, DetailView, View
 from django.utils.translation import ugettext_lazy as _
-
 
 from web.forms import AuthenticationForm, IterationCreateForm, RegistrationForm, PasswordResetForm, SetPasswordForm
 from web.models import Iteration, Algorithm
@@ -39,10 +40,11 @@ class RegisterView(FormView):
     form_class = RegistrationForm
     success_url = reverse_lazy('login')
 
+    @atomic
     def form_valid(self, form):
         user = form.save()
         add_user_access(user=user)
-        send_activation_mail(request=self.request, user=self.object)
+        send_activation_mail(request=self.request, user=user)
 
         messages.add_message(
             self.request,
