@@ -1,9 +1,9 @@
-{% load filters %}
+{% load i18n filters %}
 
 <div class="col-sm-3 col-md-2 sidebar">
   <ul class="nav nav-sidebar">
-    <li class="{{ request|active_view:'algorithm_list' }}"><a href="{% url 'algorithm_list' %}">Algoritmi<span class="sr-only">(current)</span></a></li>
-    <li class="{{ request|active_view:'home' }}"><a href="{% url 'home' %}">Rezultati <span class="sr-only">(current)</span></a></li>
-    <li class="{{ request|active_view:'iteration_create' }}"><a href="{% url 'iteration_create' %}">Nova obrada</a></li>
+    <li class="{{ request|active_view:'algorithm_list' }}"><a href="{% url 'algorithm_list' %}">{% trans 'Algoritmi' %}<span class="sr-only">(current)</span></a></li>
+    <li class="{{ request|active_view:'home' }}"><a href="{% url 'home' %}">{% trans 'Rezultati' %}<span class="sr-only">(current)</span></a></li>
+    <li class="{{ request|active_view:'iteration_create' }}"><a href="{% url 'iteration_create' %}">{% trans 'Nova obrada' %}</a></li>
   </ul>
 </div>
