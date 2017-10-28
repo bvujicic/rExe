@@ -20,13 +20,13 @@
 
     <form class="form-signin" action="{% url 'login' %}" method="POST">{% csrf_token %}
 
-      <h2 class="form-signin-heading">Logiraj se</h2>
+      <h2 class="form-signin-heading">{% trans 'Logiraj se' %}</h2>
       <label for="{{ form.username.id_for_label }}" class="sr-only">{{ form.username.label }}</label>
       {{ form.username }}
       <label for="{{ form.password.id_for_label }}" class="sr-only">{{ form.password.label }}</label>
       {{ form.password }}
       <br>
-      <input class="btn btn-lg btn-primary btn-block" type="submit" value="Pošalji">
+      <input class="btn btn-lg btn-primary btn-block" type="submit" value="{% trans 'Pošalji' %}">
       <br>
       {% for error in form.non_field_errors %}
         <div class="alert alert-danger" role="alert">

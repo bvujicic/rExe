@@ -11,7 +11,7 @@
   <div class="col-md-4">
     <form class="form-signin" action="{% url 'register' %}" method="POST">{% csrf_token %}
 
-      <h2 class="form-signin-heading">Registracija</h2>
+      <h2 class="form-signin-heading">{% trans 'Registracija' %}</h2>
       <label for="{{ form.first_name.id_for_label }}" class="sr-only">{{ form.first_name.label }}</label>
       {{ form.first_name }}
       <label for="{{ form.last_name.id_for_label }}" class="sr-only">{{ form.last_name.label }}</label>
