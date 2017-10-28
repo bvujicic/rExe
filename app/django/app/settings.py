@@ -120,7 +120,7 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 
 # Internationalization
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'hr'
 LANGUAGES = (
     ('hr', _('hrvatski')),
     ('en', _('engleski'))
